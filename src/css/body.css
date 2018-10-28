@@ -1,5 +1,5 @@
 body{
-    background-color: whitesmoke;
+    background-color: white;
 }
 
 .navigation{
@@ -44,6 +44,14 @@ body{
     -webkit-box-shadow: -1px -1px 39px -12px rgba(129,143,235,0.36);
     -moz-box-shadow: -1px -1px 39px -12px rgba(129,143,235,0.36);
     box-shadow: -1px -1px 39px -12px rgba(129,143,235,0.36);
+}
+
+.contenedor-grupos{
+    padding: 1em;
+    width: 90%;
+    margin: auto;
+    margin-top: 2.5em;
+    background-color: white;
 }
 
 .form{

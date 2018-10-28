@@ -14,7 +14,6 @@ class Header extends Component{
     }
 
     level(){
-        console.log(this.props);
         if(this.props.level === 1){
             this.setState({
                 header: [
@@ -24,7 +23,7 @@ class Header extends Component{
                      icon:"fas fa-home"
                  },
                  {
-                     route: "/groups",
+                     route: "/mygroups",
                      tag: "Mis Grupos",
                      icon:"fas fa-chalkboard-teacher"
                  },
@@ -42,11 +41,6 @@ class Header extends Component{
                     route: "/catalogues",
                     tag:"Catalogós",
                     icon:"fas fa-book-open",
-                    nav:{
-                        route:"/catalogues/docente",
-                        tag: "Docente",
-                        icon:"fas fa-chalkboard-teacher"
-                    }
                 },
                  {
                      route: "/settings",

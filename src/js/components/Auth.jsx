@@ -8,12 +8,14 @@ import {
 } from 'react-router-dom';
 import request from 'superagent';
 
-//componets
+//componets global
 import Header from './global/Header';
 import Page404 from '../components/Page404';
 import LoginForm from '../components/login/Login';
 
-//views
+import Mygroups from './mygroups';
+
+//catalogos
 import Home from './Home';
 import Docente from './catalogo/view/Docente';
 import Catalogo from './catalogo/Catalogo';
@@ -95,7 +97,7 @@ class Login extends Component {
           .set('Accept', /application\/json/)
           .end((err, response)=>{
             const token = response.body.token;
-            console.log(response.body);
+//            console.log(response.body); imprime el token
             this.setState({
                 token: token
             })
@@ -129,6 +131,7 @@ const Routes = () =>(
     <Switch>
         <PrivateRoute exact path="/home" component={Home}/>
         <PrivateRoute exact path="/catalogues" component={Catalogo}/>     
+        <PrivateRoute exact path="/mygroups" component={Mygroups}/> 
         <Route component={Page404}/>
     </Switch>
 )
