@@ -59,7 +59,7 @@ class Header extends Component{
                     icon:"fas fa-home"
                 },
                 {
-                    route: "/groups",
+                    route: "/mygroups",
                     tag: "Mis Grupos",
                     icon:"fas fa-chalkboard-teacher"
                 },
@@ -75,10 +75,14 @@ class Header extends Component{
     render(){
         return(
             <nav className="navbar sticky-top navbar-expand-lg navbar-dark navigation">
-                    <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample08" aria-controls="navbarsExample08" aria-expanded="true" aria-label="Toggle navigation">
+                    <button className="navbar-toggler" type="button" 
+                        data-toggle="collapse"
+                        data-target="#navbarsExample08"
+                        aria-controls="navbarsExample08"
+                        aria-expanded="true" 
+                        aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"></span>
                     </button>
-
                     <div className="navbar-collapse justify-content-md-center collapse show" id="navbarsExample08"  >
                         <ul className="navbar-nav ulPersonalize">
                             {
@@ -89,7 +93,10 @@ class Header extends Component{
                                 )
                             }
                             <li className="nav-item">
-                                <button className="nav-link" onClick={()=> this.props.fakeAuth.sigout(()=> this.props.history.push('/'))}>Salir <i className="fas fa-sign-out-alt"></i></button>
+                                <button className="nav-link" 
+                                    onClick={()=> this.props.fakeAuth.sigout(()=> this.props.history.push('/'))}>
+                                    Salir <i className="fas fa-sign-out-alt"></i>
+                                </button>
                             </li>
                         </ul>
                     </div>

@@ -46,7 +46,7 @@ class Docente extends Component{
                     <button className="col-md-1 btn btn-outline-primary btn-sm button-form"
                         onClick={e=>{this.showForm(e)}}
                     >{this.state.name} <i className={this.state.icon}></i></button>
-                </div>                    
+                </div>
                 {
                     this.state.showForm?
                     <div>

@@ -175,3 +175,27 @@ body{
     }
   }
 
+.info-group{
+    margin-top: 2em;
+}
+
+.table-parcial{
+    width: 90%;
+    margin: auto;
+}
+
+.table-content-parcial{
+    margin-top: 2em;
+}
+
+.all-table{
+    margin-top: 2em;
+}
+
+.btn-grupos{
+    color: #0099ff;
+}
+
+.btn-grupos:hover{
+    color: #000;
+}

@@ -42,7 +42,6 @@ class DocenteTable extends Component {
             </div>:
             null
           }
-
             <form className="contact100-form validate-form">
 
               <div className="wrap-input100">
@@ -54,7 +53,6 @@ class DocenteTable extends Component {
                 />
                 <span className="focus-input100"></span>
               </div>
-
               <div className="wrap-input100">
                 <input className="input100" type="text" required
                   name = "nombre"
@@ -64,7 +62,6 @@ class DocenteTable extends Component {
                 />
                 <span className="focus-input100"></span>
               </div>
-
               <div className="container-contact100-form-btn">
                 <button className="contact100-form-btn"
                   onClick={e=>{
@@ -74,7 +71,6 @@ class DocenteTable extends Component {
                   Guardar
                 </button>
               </div>
-
             </form>
           </div>
     );

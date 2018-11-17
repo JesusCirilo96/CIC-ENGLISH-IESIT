@@ -7,9 +7,11 @@ import {
     Switch
 } from 'react-router-dom';
 import request from 'superagent';
+import store from '../store';
 
 //componets global
 import Header from './global/Header';
+import Footer from './global/footer';
 import Page404 from '../components/Page404';
 import LoginForm from '../components/login/Login';
 
@@ -17,7 +19,6 @@ import Mygroups from './mygroups';
 
 //catalogos
 import Home from './Home';
-import Docente from './catalogo/view/Docente';
 import Catalogo from './catalogo/Catalogo';
 
 const Protected = () => <h3>Protected content</h3>
@@ -29,10 +30,9 @@ const AuthButton = withRouter(({history})=>(
     ? 
         <div>
            <Header level = {level} fakeAuth={fakeAuth} history={history}/>
-            
         </div>
     :
-    <span></span>
+    null
 ))
 
 const PrivateRoute = ({ component: Component, rest}) => (
@@ -85,6 +85,8 @@ class Login extends Component {
                         case "4": level = 4; break;
                     }
                     fakeAuth.authenticate(()=>this.setState({redirectRoute:true}))
+                    this.dataTeacher(response.body.authData.user)
+                    console.log(response.body.authData.user)
                 }
             }
         });
@@ -125,6 +127,14 @@ class Login extends Component {
 
         }
     }
+
+    dataTeacher(data) {
+        store.dispatch({
+            type: "DATA_TEACHER",
+            data
+        })
+    }
+
 }
 
 const Routes = () =>(
