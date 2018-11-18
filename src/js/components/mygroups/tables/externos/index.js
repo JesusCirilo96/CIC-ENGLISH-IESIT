@@ -65,11 +65,7 @@ class Index extends Component{
                                 <p>Level: {this.props.data.NIVEL}</p>
                             </div>
                             <div className="col-md-4">
-                                <p>Days: {
-                                    JSON.parse(this.props.data.DIAS).map((data,i) =>
-                                        <span key={i}>{data.dia} </span>
-                                    )
-                                }</p>
+                                <p>Days: {this.props.data.DIAS}</p>
                             </div>
                             <div className="col-md-4">
                                 <p>Classroom: {this.props.data.SALON}</p>

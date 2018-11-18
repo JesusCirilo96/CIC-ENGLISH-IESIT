@@ -35,13 +35,9 @@ class NivelTable extends Component {
   render() {
     const columns = [
       {
-        Header:"ID",
-        accessor: "ID_NIVEL"
-      },
-      {
         Header:"Nombre corto",
         accessor: "NOMBRE_CORTO",
-        filterable: true
+        filterable: false
       },
       {
         Header:"Nombre",

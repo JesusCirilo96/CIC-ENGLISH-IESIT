@@ -42,7 +42,7 @@ class Internos extends Component{
                                             <div className="card-body">
                                                 <p className="card-text">Level: {data.NIVEL}</p>
                                                 <p className="card-text">Classroom: {data.SALON}</p>
-                                                <p className="card-text">Days {data.DIAS}:</p>                                       
+                                                <p className="card-text">Days: {data.DIAS}</p>                                       
                                             </div>
                                         </div>
                                     </div>

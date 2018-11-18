@@ -4,6 +4,7 @@ import React, { Component} from "react";
 
 import Docente from './view/Docente';
 import Nivel from './view/Nivel';
+import Licenciatura from './view/Licenciatura';
 
 class Catalogo extends Component{
 
@@ -18,13 +19,13 @@ class Catalogo extends Component{
                     <a className="nav-link" id="nivel-tab" data-toggle="tab" href="#nivel" role="tab" aria-controls="nivel" aria-selected="false">Nivel</a>
                 </li>
                 <li className="nav-item">
-                    <a className="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Contact</a>
+                    <a className="nav-link" id="licenciatura-tab" data-toggle="tab" href="#licenciatura" role="tab" aria-controls="licenciatura" aria-selected="false">Licenciatura</a>
                 </li>
             </ul>
             <div className="tab-content" id="myTabContent">
                 <div className="tab-pane fade show active" id="docente" role="tabpanel" aria-labelledby="docente-tab"><Docente /></div>
                 <div className="tab-pane fade" id="nivel" role="tabpanel" aria-labelledby="nivel-tab"><Nivel /></div>
-                <div className="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
+                <div className="tab-pane fade" id="licenciatura" role="tabpanel" aria-labelledby="licenciatura-tab"><Licenciatura /></div>
             </div>
 
 

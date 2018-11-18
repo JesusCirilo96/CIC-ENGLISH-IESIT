@@ -1,11 +1,10 @@
-import React, { Component } from "react";
+import React, { Component} from "react";
 import request from 'superagent';
 import ReactTable from "react-table";
 
-import 'react-table/react-table.css'
+import 'react-table/react-table.css';
 
-
-class Table extends Component {
+class LicenciaturaTable extends Component {
 
   constructor(props){
     super(props);
@@ -16,7 +15,7 @@ class Table extends Component {
   
   componentDidMount(){
     request
-      .get('http://192.168.0.15:3000/paciente')
+      .get('http://localhost:3000/licenciatura')
       .end((err, response)=>{
         const data = JSON.parse(response.text);
         this.setState({
@@ -34,24 +33,15 @@ class Table extends Component {
   }
 
   render() {
-    console.log(this.state.dataJson);
     const columns = [
       {
-        Header:"Id",
-        accessor: "PACIENTE_ID"
-      },
-      {
         Header:"Nombre",
-        accessor: "NOMBRE_COMPLETO"
-      },
-      {
-        Header:"Sexo",
-        accessor: "SEXO",
+        accessor: "NOMBRE",
         filterable: false
       },
       {
-        Header:"Cumpleaños",
-        accessor: "FECHA_NACIMIENTO",
+        Header:"Siglas",
+        accessor: "SIGLAS",
         filterable: false
       },
       {
@@ -75,26 +65,25 @@ class Table extends Component {
 
     ];
     return (
-      <div className="col-md-12 contenedor-tabla">
-      <h1>Table</h1>
+        <div className="col-md-12 contenedor-tabla">
         <div className="tabla">
           <ReactTable 
-            previousText = "Anterior"
-            nextText =  'Siguiente'
-            loadingText = 'Cargando...'
-            noDataText = 'No se encontraron Registros'
-            pageText = 'Pagina'
-            ofText = 'de'
-            rowsText = 'Registros'
-            defaultPageSize = {5}
-            filterable
-            columns = {columns}
-            data = {this.state.dataJson}>
+              previousText = "Anterior"
+              nextText =  'Siguiente'
+              loadingText = 'Cargando...'
+              noDataText = 'No se encontraron Registros'
+              pageText = 'Pagina'
+              ofText = 'de'
+              rowsText = 'Registros'
+              defaultPageSize = {5}
+              filterable
+              columns = {columns} data = {this.state.dataJson}>
           </ReactTable>      
         </div>
-      </div>
+        </div>
+        
     );
   }
 }
 
-export default Table;
+export default LicenciaturaTable;
