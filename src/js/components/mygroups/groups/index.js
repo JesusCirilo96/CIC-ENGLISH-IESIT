@@ -49,7 +49,7 @@ class Index extends Component{
             </ul>
             <div className="tab-content" id="myTabContent">
                 <div className="tab-pane fade show active" id="interno" role="tabpanel" aria-labelledby="interno-tab">
-                <Internos data={this.state.dataint}/>
+                    <Internos data={this.state.dataint}/>
                  </div>
                 <div className="tab-pane fade" id="externo" role="tabpanel" aria-labelledby="externo-tab">
                     <Externos data = {this.state.dataext} />

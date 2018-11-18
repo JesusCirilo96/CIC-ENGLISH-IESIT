@@ -1,6 +1,6 @@
 import React, { Component} from "react";
 
-import TableInternos from '../tables';
+import TableInternos from '../tables/internos';
 
 let datos
 
