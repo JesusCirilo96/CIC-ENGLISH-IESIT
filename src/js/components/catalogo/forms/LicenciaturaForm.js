@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import request from 'superagent';
 
-class DocenteTable extends Component {
+class LicenciaturaTable extends Component {
 
   constructor (){
     super();
@@ -77,4 +77,4 @@ class DocenteTable extends Component {
   }
 }
 
-export default DocenteTable;
+export default LicenciaturaTable;

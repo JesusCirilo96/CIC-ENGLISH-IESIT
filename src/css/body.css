@@ -50,7 +50,7 @@ body{
     padding: 1em;
     width: 90%;
     margin: auto;
-    margin-top: 2.5em;
+    margin-top: 2em;
     background-color: white;
 }
 
@@ -68,6 +68,19 @@ body{
     box-shadow: -1px -1px 39px -12px rgba(129,143,235,0.36);
 }
 
+.form-large{
+    padding: .5em;
+    width: 90%;
+    margin: auto;
+    margin-top: 2em;
+    margin-bottom: 2em;
+    background-color: white;
+
+    border-radius: 1em;
+    -webkit-box-shadow: -1px -1px 39px -12px rgba(129,143,235,0.36);
+    -moz-box-shadow: -1px -1px 39px -12px rgba(129,143,235,0.36);
+    box-shadow: -1px -1px 39px -12px rgba(129,143,235,0.36);
+}
 .selectStyle{
     width: 100%;
     background-color: #fff;
@@ -198,4 +211,17 @@ body{
 
 .btn-grupos:hover{
     color: #000;
+}
+
+.bold{
+    font-weight: bold;
+}
+
+.button-form-group{
+    margin-left: 3em;
+}
+
+.error-field{
+    color: red;
+    font-size: 12px;
 }
