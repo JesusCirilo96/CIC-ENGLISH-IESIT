@@ -6,7 +6,7 @@ class Final extends Component {
 
   constructor(){
     super();
-
+    
     this.renderEditable = this.renderEditable.bind(this);
   }
 

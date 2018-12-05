@@ -6,6 +6,7 @@ class DocenteTable extends Component {
   constructor (){
     super();
     this.state = {
+      modificacion:'S',
       nombre : '',
       apellido_pat : '',
       apellido_mat : '',

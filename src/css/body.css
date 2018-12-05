@@ -38,6 +38,7 @@ body{
     width: 90%;
     margin: auto;
     margin-top: 2.5em;
+    margin-bottom: 2.5em;
     background-color: white;
 
     border-radius: 1em;
@@ -224,4 +225,30 @@ body{
 .error-field{
     color: red;
     font-size: 12px;
+}
+
+.form-settings-aside{
+    padding-top: 3em;
+    padding-left: 2em;
+    padding-right: 2em;
+}
+
+.form-settings{
+    padding: 3em;
+}
+
+.img-profile-settings{
+    width: 100%;
+    margin-bottom: 1em;
+}
+
+.img-profile-settings figure{
+    width: 250px;
+    height:250px;
+    margin: auto;
+}
+.img-profile-settings figure img{
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
 }

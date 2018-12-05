@@ -13,15 +13,18 @@ import store from '../store';
 import Header from './global/Header';
 import Footer from './global/footer';
 import Page404 from '../components/Page404';
+
+//login
 import LoginForm from '../components/login/Login';
 
+//Header
 import Mygroups from './mygroups';
+import Students from './students';
+import Settings from './settings';
 
 //catalogos
 import Home from './Home';
 import Catalogo from './catalogo/Catalogo';
-
-const Protected = () => <h3>Protected content</h3>
 
 var level;
 
@@ -86,7 +89,7 @@ class Login extends Component {
                     }
                     fakeAuth.authenticate(()=>this.setState({redirectRoute:true}))
                     this.dataTeacher(response.body.authData.user)
-                    console.log(response.body.authData.user)
+                    //console.log(response.body.authData.user)
                 }
             }
         });
@@ -141,7 +144,10 @@ const Routes = () =>(
     <Switch>
         <PrivateRoute exact path="/home" component={Home}/>
         <PrivateRoute exact path="/catalogues" component={Catalogo}/>     
-        <PrivateRoute exact path="/mygroups" component={Mygroups}/> 
+        <PrivateRoute exact path="/mygroups" component={Mygroups}/>
+        <PrivateRoute exact path="/students" component={Students}/>
+        <PrivateRoute exact path="/settings" component={Settings}/>
+
         <Route component={Page404}/>
     </Switch>
 )

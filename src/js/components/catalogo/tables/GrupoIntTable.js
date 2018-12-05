@@ -15,17 +15,22 @@ class GrupoTable extends Component{
         };
         
         this.showForm = this.showForm.bind(this)
+        this.getRequest = this.getRequest.bind(this)
     }
 
     componentDidMount(){
+        this.getRequest()
+    }
+
+    getRequest(){
         request
-            .post('http://localhost:3000/getgroupint')
-            .send({"clave":"0"})            
-            .set('Accept', /application\/json/)
-            .end((err, response)=>{
-                const res = (JSON.parse(response.text))
-                this.setState({dataJson:res})
-            });
+        .post('http://localhost:3000/getgroupint')
+        .send({"clave":"0"})            
+        .set('Accept', /application\/json/)
+        .end((err, response)=>{
+            const res = (JSON.parse(response.text))
+            this.setState({dataJson:res})
+        });
     }
 
     showForm(){
@@ -56,7 +61,8 @@ class GrupoTable extends Component{
                                                 <p className="card-text"><strong>Level :</strong> {data.NIVEL}</p>
                                                 <p className="card-text"><strong>Classroom: </strong>{data.SALON}</p>
                                                 <p className="card-text"><strong>Days: </strong>{data.DIAS}</p>
-                                                <p className="card-text"><strong>Teacher: </strong> {data.NOMBRE_DOCENTE}</p>                                       
+                                                <p className="card-text"><strong>Schedule: </strong> {data.HORARIO}</p>        
+                                                <p className="card-text"><strong>Teacher: </strong> {data.NOMBRE_DOCENTE}</p> 
                                             </div>
                                         </div>
                                     </div>
@@ -69,7 +75,7 @@ class GrupoTable extends Component{
             }
             {
                 this.state.showTable?
-                   <GrupoEditForm data = {datos} showEdit={this.showForm} edit={true}/>
+                   <GrupoEditForm data = {datos} showEdit={this.showForm} edit={true} get_data={this.getRequest}/>
                 :null
             }
             </div>

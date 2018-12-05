@@ -27,11 +27,6 @@ class Header extends Component{
                      tag: "Mis Grupos",
                      icon:"fas fa-chalkboard-teacher"
                  },
-                 {
-                    route: "/teachers",
-                    tag:"Docentes",
-                    icon:"fas fa-user-graduate"
-                },
                 {
                     route: "/students",
                     tag:"Alumnos",
@@ -71,6 +66,23 @@ class Header extends Component{
                ]
            })
         }
+
+        if(this.props.level === 3){
+            this.setState({
+                header: [
+                 {
+                     route: "/home",
+                     tag: "Inicio",
+                     icon:"fas fa-home"
+                 },
+                 {
+                     route: "/qualification",
+                     tag:"Mis Calificaciones",
+                     icon:"fas fa-award"
+                 }
+                ]
+            })
+         }
     }
     render(){
         return(

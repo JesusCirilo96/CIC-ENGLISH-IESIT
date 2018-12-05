@@ -9,57 +9,77 @@ class GrupoForm extends Component {
     this.state = {
         dataDocente:[],
         dataNivel: [],
+        dataPeriodo:[],
+        dataCiclo:[],
+        accion: '',
+        id:this.props.data.GRUPO_ID,
         nombre: '',
-        errorNombre:false,
         salon: '',
-        errorSalon:false,
         grupo: '',
-        errorGrupo:false,
         modalidad:'',
-        errorModalidad:false,
         ciclo_escolar:'',
-        errorCiclo:false,
         periodo_escolar:'',
-        errorPeriodo:false,
         turno:'',
-        errorTurno:false,
         nivel:'',
-        errorNivel:false,
         dias: '',
-        errorDias:false,
         docente:'',
-        errorDocente:false,
         estado:'',
-        errorEstado:false,
+        horario:'',
         msg: false
     }
   }
 
   componentDidMount(){
-    request
-      .get('http://localhost:3000/docente')
-      .end((err, response)=>{
-        const data = JSON.parse(response.text);
-        var docente = []
-        for(var key in data){
-            docente.push({'value':data[key].DOCENTE_ID,'label':data[key].NOMBRE_COMPLETO})
-        }
-        this.setState({
-          dataDocente: docente
+    if(!this.props.edit){
+        request
+        .get('http://localhost:3000/docente')
+        .end((err, response)=>{
+            const data = JSON.parse(response.text);
+            var docente = []
+            for(var key in data){
+                docente.push({'value':data[key].DOCENTE_ID,'label':data[key].NOMBRE_COMPLETO})
+            }
+            this.setState({
+            dataDocente: docente
+            });
         });
-    });
-    request
-      .get('http://localhost:3000/nivel')
-      .end((err, response)=>{
-        const data = JSON.parse(response.text);
-        var level = []
-        for(var key in data){
-            level.push({'value':data[key].ID_NIVEL,'label':data[key].NOMBRE})
-        }
-        this.setState({
-          dataNivel: level
+        request
+        .get('http://localhost:3000/nivel')
+        .end((err, response)=>{
+            const data = JSON.parse(response.text);
+            var level = []
+            for(var key in data){
+                level.push({'value':data[key].ID_NIVEL,'label':data[key].NOMBRE})
+            }
+            this.setState({
+            dataNivel: level
+            });
         });
-    });
+        request
+        .get('http://localhost:3000/cicloescolar')
+        .end((err, response)=>{
+            const data = JSON.parse(response.text);
+            var ciclo = []
+            for(var key in data){
+                ciclo.push({'value':data[key].CICLO_ESCOLAR_ID,'label':data[key].NOMBRE})
+            }
+            this.setState({
+            dataCiclo: ciclo
+            });
+        });
+        request
+        .get('http://localhost:3000/periodoescolar')
+        .end((err, response)=>{
+            const data = JSON.parse(response.text);
+            var periodo = []
+            for(var key in data){
+                periodo.push({'value':data[key].PERIODO_ID,'label':data[key].NOMBRE})
+            }
+            this.setState({
+            dataPeriodo: periodo
+            });
+        });
+    }
   }
 
   change(e){
@@ -79,47 +99,66 @@ class GrupoForm extends Component {
   }
 
   save (e){
-    var nombre = this.state.nombre, salon = this.state.salon, grupo = this.state.grupo, modalidad =this.state.modalidad
-    var ciclo = this.state.ciclo_escolar, periodo = this.state.periodo_escolar, turno = this.state.turno, nivel = this.state.nivel
-    var dias = this.state.dias, docente = this.state.dias, estado = this.state.docente
+    var nombre = this.state.nombre, salon = this.state.salon, horario = this.state.horario, estado = this.state.estado
+    if(this.props.edit === false){
+        var grupo = this.state.grupo, modalidad =this.state.modalidad, ciclo = this.state.ciclo_escolar, periodo = this.state.periodo_escolar
+        var turno = this.state.turno, nivel = this.state.nivel
+        var dias = this.state.dias, docente = this.state.docente
 
-    if(nombre === '') this.setState({errorNombre: true})
-    if(salon === '') this.setState({errorSalon: true})
-    if(grupo === '') this.setState({errorGrupo: true})
-    if(modalidad === '') this.setState({errorModalidad: true})
-    if(ciclo === '') this.setState({errorCiclo: true})
-    if(periodo === '') this.setState({errorPeriodo: true})
-    if(turno === '') this.setState({errorTurno: true})
-    if(nivel === '') this.setState({errorNivel: true})
-    if(dias === '') this.setState({errorDias: true})
-    if(docente === '') this.setState({errorDocente: true})
-    if(estado === '') this.setState({errorEstado: true})
+      /*  if(nombre === '') this.setState({errorNombre: true})
+        if(salon === '') this.setState({errorSalon: true})
+        if(grupo === '') this.setState({errorGrupo: true})
+        if(modalidad === '') this.setState({errorModalidad: true})
+        if(ciclo === '') this.setState({errorCiclo: true})
+        if(periodo === '') this.setState({errorPeriodo: true})
+        if(turno === '') this.setState({errorTurno: true})
+        if(nivel === '') this.setState({errorNivel: true})
+        if(dias === '') this.setState({errorDias: true})
+        if(docente === '') this.setState({errorDocente: true})
+        if(estado === '') this.setState({errorEstado: true})
+        if(horario === '') this.setState({errorEstado: true})*/
 
-    if(nombre !== '' && 
-        salon !== '' &&
-        grupo !== '' &&
-        modalidad !== '' && 
-        ciclo !== '' &&
-        periodo !== '' &&
-        turno !== '' && 
-        nivel !== '' && 
-        dias !== '' && 
-        docente !== '' &&
-        estado !== ''){
-        request
-        .post('http://localhost:3000/grupoint')
-        .send(this.state)
-        .set('Accept', /application\/json/)
-        .end((err, response)=>{
-            const res = (JSON.parse(response.text)['success']);
-            if(res){
-            this.setState({
-                msg : !this.state.msg,
-            });
-            } 
-        });
+        if(nombre !== '' && 
+            salon !== '' &&
+            grupo !== '' &&
+            modalidad !== '' && 
+            ciclo !== '' &&
+            periodo !== '' &&
+            turno !== '' && 
+            nivel !== '' && 
+            dias !== '' && 
+            docente !== '' &&
+            estado !== '' &&
+            horario !== ''){
+                this.state.accion = 'S'
+                this.saveRequest()           
+        }
+    }else{
+        if(nombre === ''){this.state.nombre = this.props.data.NOMBRE_GRUPO}
+        if(salon === ''){this.state.salon = this.props.data.SALON}
+        if(horario === ''){this.state.horario = this.props.data.HORARIO}
+        if(estado === ''){this.state.estado = this.props.data.ESTADO}
+        this.state.accion = 'U'
+        this.saveRequest()
+        this.props.get_data()
     }
-      e.preventDefault();
+    console.log(this.state)
+    e.preventDefault()
+  }
+
+  saveRequest(){
+    request
+    .post('http://localhost:3000/grupoint')
+    .send(this.state)
+    .set('Accept', /application\/json/)
+    .end((err, response)=>{
+        const res = (JSON.parse(response.text)['success']);
+        if(res){
+        this.setState({
+            msg : !this.state.msg,
+        });
+        } 
+    });
   }
 
   getGrupo(grupo){
@@ -204,16 +243,11 @@ class GrupoForm extends Component {
                             <input className="input100" type="text" required
                             name = "nombre"
                             placeholder="Example: Beginner A"
-                            value={this.props.data.NOMBRE_GRUPO}
+                            defaultValue={this.props.data.NOMBRE_GRUPO}
                             onChange={e=> this.change(e)}
                             />
                             <span className="focus-input100"></span>
                         </div>
-                        {
-                            this.state.errorNombre? 
-                                <div className="error-field"><p><i className="fas fa-exclamation-triangle"></i> This field cannot be empty</p></div>:
-                            null
-                        }
                     </div>
                     <div className="col-md-4">
                     Salon:
@@ -221,16 +255,11 @@ class GrupoForm extends Component {
                             <input className="input100" type="text" required
                             name = "salon"
                             placeholder="Example: A1"
-                            value={this.props.data.SALON}
+                            defaultValue={this.props.data.SALON}
                             onChange={e=> this.change(e)} 
                             />
                             <span className="focus-input100"></span>
                         </div>
-                        {
-                            this.state.errorSalon? 
-                                <div className="error-field"><p><i className="fas fa-exclamation-triangle"></i> This field cannot be empty</p></div>:
-                            null
-                        }
                     </div>
                     <div className="col-md-4">
                     Grupo:
@@ -258,11 +287,6 @@ class GrupoForm extends Component {
                                 classNamePrefix="select"
                                 />
                             </div>
-                        }
-                        {
-                            this.state.errorGrupo? 
-                                <div className="error-field"><p><i className="fas fa-exclamation-triangle"></i> This field cannot be empty</p></div>:
-                            null
                         }
                     </div>
                 </div>
@@ -295,45 +319,60 @@ class GrupoForm extends Component {
                                 />
                             </div>
                         }
-                        {
-                            this.state.errorModalidad? 
-                                <div className="error-field"><p><i className="fas fa-exclamation-triangle"></i> This field cannot be empty</p></div>:
-                            null
-                        }
                     </div>
                     <div className="col-md-4">
                     Ciclo Escolar:
+                    {
+                        this.props.edit?
                         <div className="wrap-input100">
-                            <input className="input100" type="text" required
-                            name = "ciclo_escolar"
-                            placeholder="Example: 2014-2018"
-                            value={this.props.data.CICLO_ESCOLAR}
-                            onChange={e=> this.change(e)}
-                            />
+                              <input className="input100" disabled
+                                type="text"
+                                disabled
+                                value={this.props.data.CICLO_ESCOLAR}
+                              />
                             <span className="focus-input100"></span>
+                        </div>:
+                        <div className="selectStyle">
+                             <Select className="form-control"
+                                    onChange={e => 
+                                        this.setState({
+                                            ciclo_escolar: e.value
+                                        })
+                                    }
+                                    name = "nivel"
+                                    options = {this.state.dataCiclo}
+                                    className="basic-multi-select"
+                                    classNamePrefix="select"
+                                />
                         </div>
-                        {
-                            this.state.errorCiclo? 
-                                <div className="error-field"><p><i className="fas fa-exclamation-triangle"></i> This field cannot be empty</p></div>:
-                            null
-                        }
+                    }
                     </div>
                     <div className="col-md-4">
                     Periodo Escolar:
+                    {
+                        this.props.edit?
                         <div className="wrap-input100">
-                            <input className="input100" type="text" required
-                            name = "periodo_escolar"
-                            placeholder="Example: Agosto 2014 - Enero 2015"
-                            value={this.props.data.PERIODO_ESCOLAR}
-                            onChange={e=> this.change(e)}
-                            />
+                              <input className="input100" disabled
+                                type="text"
+                                disabled
+                                value={this.props.data.PERIODO_ESCOLAR}
+                              />
                             <span className="focus-input100"></span>
-                        </div>
-                        {
-                            this.state.errorPeriodo? 
-                                <div className="error-field"><p><i className="fas fa-exclamation-triangle"></i> This field cannot be empty</p></div>:
-                            null
-                        }
+                        </div>:                
+                            <div className="selectStyle">
+                                <Select className="form-control"
+                                    onChange={e => 
+                                        this.setState({
+                                            periodo_escolar: e.value
+                                        })
+                                    }
+                                    name = "nivel"
+                                    options = {this.state.dataPeriodo}
+                                    className="basic-multi-select"
+                                    classNamePrefix="select"
+                                />
+                            </div>                           
+                    }
                     </div>
                 </div>
 
@@ -365,11 +404,6 @@ class GrupoForm extends Component {
                                 />
                             </div>
                         }
-                        {
-                            this.state.errorTurno? 
-                                <div className="error-field"><p><i className="fas fa-exclamation-triangle"></i> This field cannot be empty</p></div>:
-                            null
-                        }
                     </div>
                     <div className="col-md-4">
                     Nivel:
@@ -397,11 +431,6 @@ class GrupoForm extends Component {
                                     classNamePrefix="select"
                                 />
                             </div>
-                        }
-                        {
-                            this.state.errorNivel? 
-                                <div className="error-field"><p><i className="fas fa-exclamation-triangle"></i> This field cannot be empty</p></div>:
-                            null
                         }
                     </div>
                     <div className="col-md-4">
@@ -432,15 +461,25 @@ class GrupoForm extends Component {
                                 />
                             </div>
                         }
-                        {
-                            this.state.errorDias? 
-                                <div className="error-field"><p><i className="fas fa-exclamation-triangle"></i> This field cannot be empty</p></div>:
-                            null
-                        }
                     </div>
                 </div>
 
                 <div className="row">
+                    <div className="col-md-4">
+                    Horario:
+                        {
+                            <div className="wrap-input100">
+                              <input className="input100"
+                                type="text"
+                                name="horario"
+                                defaultValue={this.props.data.HORARIO}
+                                placeholder="Example: 09:10 Am to 10:30 Am"
+                                onChange={e=> this.change(e)}
+                              />
+                              <span className="focus-input100"></span>
+                            </div>
+                        }
+                    </div>
                     <div className="col-md-4">
                     Docente:
                         {
@@ -468,11 +507,6 @@ class GrupoForm extends Component {
                                 />
                             </div>
                         }
-                        {
-                            this.state.errorDocente? 
-                                <div className="error-field"><p><i className="fas fa-exclamation-triangle"></i> This field cannot be empty</p></div>:
-                            null
-                        }
                     </div>
                     <div className="col-md-4">
                     Estado:
@@ -490,13 +524,9 @@ class GrupoForm extends Component {
                                 classNamePrefix="select"
                             />
                         </div>
-                        {
-                            this.state.errorEstado? 
-                                <div className="error-field"><p><i className="fas fa-exclamation-triangle"></i> This field cannot be empty</p></div>:
-                            null
-                        }
-                    </div>
-                    <div className="col-md-4">
+                    </div>              
+                </div>
+                <div className="">
                         <div className="container-contact100-form-btn">
                             <button className="contact100-form-btn"
                             onClick={e=>{
@@ -506,8 +536,7 @@ class GrupoForm extends Component {
                             Guardar
                             </button>
                         </div>
-                    </div>               
-                </div>
+                </div> 
             </form>
           </div>
     );
@@ -515,3 +544,16 @@ class GrupoForm extends Component {
 }
 
 export default GrupoForm;
+
+/*
+
+<div className="wrap-input100">
+                            <input className="input100" type="text" required
+                                name = "ciclo_escolar"
+                                placeholder="Example: 2014-2018"
+                                defaultValue={this.props.data.CICLO_ESCOLAR}
+                                onChange={e=> this.change(e)}
+                            />
+                            <span className="focus-input100"></span>
+                        </div>
+*/

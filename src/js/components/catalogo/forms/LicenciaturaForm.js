@@ -47,7 +47,7 @@ class LicenciaturaTable extends Component {
               <div className="wrap-input100">
                 <input className="input100" type="text" required
                   name = "nombre"
-                  placeholder="Nombre completo"
+                  placeholder="Full name"
                   value={this.state.nombre}
                   onChange={e=> this.change(e)}
                 />
@@ -56,7 +56,7 @@ class LicenciaturaTable extends Component {
               <div className="wrap-input100">
                 <input className="input100" type="text" required
                   name = "siglas"
-                  placeholder="Siglas"
+                  placeholder="Short name or acronym"
                   value={this.state.siglas}
                   onChange={e=> this.change(e)} 
                 />
