@@ -168,7 +168,7 @@ class Alumno extends Component{
                             <div className="row form-group">
                                 <div className="col-md-4">
                                     <p className="bold">*MATRICULA:</p>
-                                    <input type="text" className="form-control" defaultValue={this.state.matricula} name="matricula" placeholder="Example: 1403B005" onChange={e=> this.change(e)} /> 
+                                    <input type="text" className="form-control" maxLength="8" defaultValue={this.state.matricula} name="matricula" placeholder="Example: 1403B005" onChange={e=> this.change(e)} /> 
                                 </div>
                             </div>
                             <div className="row form-group">

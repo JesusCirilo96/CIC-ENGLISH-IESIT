@@ -40,10 +40,10 @@ class Internos extends Component{
                                         <div className="card bg-light mb-3">
                                             <div className="card-header text-center"><strong>{data.NOMBRE_GRUPO}</strong></div>
                                             <div className="card-body">
-                                                <p className="card-text">Level: {data.NIVEL}</p>
-                                                <p className="card-text">Classroom: {data.SALON}</p>
-                                                <p className="card-text">Horario: {data.HORARIO}</p>              
-                                                <p className="card-text">Days: {data.DIAS}</p>                                       
+                                                <p className="card-text"><strong>Level:</strong> {data.NIVEL}</p>
+                                                <p className="card-text"><strong>Classroom:</strong> {data.SALON}</p>
+                                                <p className="card-text"><strong>Schedule:</strong> {data.HORARIO}</p>              
+                                                <p className="card-text"><strong>Days:</strong> {data.DIAS}</p>                                       
                                             </div>
                                         </div>
                                     </div>
