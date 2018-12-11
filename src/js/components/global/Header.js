@@ -36,12 +36,7 @@ class Header extends Component{
                     route: "/catalogues",
                     tag:"Catalogós",
                     icon:"fas fa-book-open",
-                },
-                 {
-                     route: "/settings",
-                     tag:"Configuración",
-                     icon:"fas fa-cogs"
-                 }
+                }
                 ]
             })
         }
@@ -57,11 +52,6 @@ class Header extends Component{
                     route: "/mygroups",
                     tag: "Mis Grupos",
                     icon:"fas fa-chalkboard-teacher"
-                },
-                {
-                    route: "/settings",
-                    tag:"Configuración",
-                    icon:"fas fa-cogs"
                 }
                ]
            })
@@ -104,11 +94,16 @@ class Header extends Component{
                                     </li>                                        
                                 )
                             }
-                            <li className="nav-item">
-                                <button className="nav-link" 
-                                    onClick={()=> this.props.fakeAuth.sigout(()=> this.props.history.push('/'))}>
-                                    Salir <i className="fas fa-sign-out-alt"></i>
-                                </button>
+                            <li className="nav-item dropdown">
+                                <a className="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"></a>
+                                <div className="dropdown-menu">
+                                    <Link className="dropdown-item" to="/settings">Mi perfil <i className="fas fa-cogs"></i></Link>
+                                    <div className="dropdown-divider"></div>
+                                    <Link className="dropdown-item" to="/"
+                                        onClick={()=> this.props.fakeAuth.sigout(()=> this.props.history.push('/'))}>
+                                        Salir <i className="fas fa-sign-out-alt"></i>
+                                    </Link>
+                                </div>
                             </li>
                         </ul>
                     </div>

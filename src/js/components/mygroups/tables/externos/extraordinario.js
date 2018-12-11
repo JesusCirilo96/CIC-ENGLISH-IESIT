@@ -41,8 +41,10 @@ class Extraordinario extends Component {
       .end((err, response)=>{
         const res = (JSON.parse(response.text)['success']);
         if(res){
-          console.log("Calificación de Extraordinario Actualizada");
-        } 
+          this.props.notificacion("Extraordinario","Calificación Actualizada","success")
+        }else{
+          this.props.notificacion("Final","No se pudo guardar la calificacion","error")
+        }
       });
   }
 

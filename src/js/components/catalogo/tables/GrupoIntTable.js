@@ -10,27 +10,10 @@ class GrupoTable extends Component{
         super();
         this.state={
             showForm: true,
-            showTable: false,
-            dataJson:[]
+            showTable: false
         };
         
         this.showForm = this.showForm.bind(this)
-        this.getRequest = this.getRequest.bind(this)
-    }
-
-    componentDidMount(){
-        this.getRequest()
-    }
-
-    getRequest(){
-        request
-        .post('http://localhost:3000/getgroupint')
-        .send({"clave":"0"})            
-        .set('Accept', /application\/json/)
-        .end((err, response)=>{
-            const res = (JSON.parse(response.text))
-            this.setState({dataJson:res})
-        });
     }
 
     showForm(){
@@ -46,11 +29,11 @@ class GrupoTable extends Component{
             {
                 this.state.showForm?
                     <div className="col-md-12 contenedor-grupos">
-                        <strong><p>Grupos: {this.state.dataJson.length}</p></strong>
+                        <strong><p>Grupos: {this.props.dataJson.length}</p></strong>
                         <div className="tabla">
                             <div className="row">
                                 {
-                                    this.state.dataJson.map((data,i) =>
+                                    this.props.dataJson.map((data,i) =>
                                     <div key={i} className="col-md-3" onClick={e=>{
                                         datos = data
                                         this.showForm();
@@ -75,7 +58,7 @@ class GrupoTable extends Component{
             }
             {
                 this.state.showTable?
-                   <GrupoEditForm data = {datos} showEdit={this.showForm} edit={true} get_data={this.getRequest}/>
+                   <GrupoEditForm data = {datos} showEdit={this.showForm} edit={true} get_data={this.props.getRequest}/>
                 :null
             }
             </div>

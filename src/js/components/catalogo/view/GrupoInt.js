@@ -13,6 +13,10 @@ class Grupo extends Component{
             dataDocente:[],
             dataCiclo:[],
             dataPeriodo:[],
+            dataGrupo:[],
+            updateGrupo:[],
+            updateDocente:[],
+            updateCiclo:[],
             showForm: false,
             showTable:true,
             name: "Nuevo",
@@ -20,9 +24,51 @@ class Grupo extends Component{
         }
 
         this.showForm = this.showForm.bind(this)
+        this.getRequest = this.getRequest.bind(this)
+    }
+
+    getRequest(){
+        request
+        .post('http://localhost:3000/getgroupint')
+        .send({
+            "clave": '0'
+        })            
+        .set('Accept', /application\/json/)
+        .end((err, response)=>{
+            const res = (JSON.parse(response.text))
+            this.setState({dataGrupo:res, updateGrupo:res, updateDocente:res,updateCiclo:res})
+        });
+    }
+
+    filterData(docenteFilter){
+        var updatedList = this.state.dataGrupo;
+        updatedList = updatedList.filter(function(item){
+          return item.NOMBRE_DOCENTE.toLowerCase().search(
+            docenteFilter.toLowerCase()) !== -1 ;
+        });
+        this.setState({updateDocente: updatedList, updateGrupo:updatedList});
+    }
+    
+    filterDataCiclo(cicloFilter){
+        var updatedList = this.state.updateDocente;
+        updatedList = updatedList.filter(function(item){
+          return item.CICLO_ESCOLAR.toLowerCase().search(
+            cicloFilter.toLowerCase()) !== -1 ;
+        });
+        this.setState({updateCiclo: updatedList, updateGrupo:updatedList});
+    }
+
+    filterDataPeriodo(periodoFilter){
+        var updatedList = this.state.updateCiclo;
+        updatedList = updatedList.filter(function(item){
+          return item.PERIODO_ESCOLAR.toLowerCase().search(
+            periodoFilter.toLowerCase()) !== -1 ;
+        });
+        this.setState({updateGrupo: updatedList});
     }
     
     componentDidMount(){
+        this.getRequest()
         if(!this.props.edit){
             request
             .get('http://localhost:3000/docente')
@@ -45,7 +91,7 @@ class Grupo extends Component{
                     ciclo.push({'value':data[key].CICLO_ESCOLAR_ID,'label':data[key].NOMBRE})
                 }
                 this.setState({
-                dataCiclo: ciclo
+                    dataCiclo: ciclo
                 });
             });
             request
@@ -92,11 +138,10 @@ class Grupo extends Component{
                     <div className="col-md-4">
                         <p className="bold">Docente:</p>
                         <Select className="form-control"
-                            name = "grupo"
-                           // onChange={e => 
-                            //this.setState({
-                              //  grupo: e.value
-                            //})}
+                            name = "docente"
+                            onChange={e =>
+                                this.filterData(e.label)
+                            }
                             options = {this.state.dataDocente}
                             className="basic-multi-select"
                             classNamePrefix="select"
@@ -105,11 +150,10 @@ class Grupo extends Component{
                     <div className="col-md-3">
                         <p className="bold">Ciclo Escolar:</p>
                         <Select className="form-control"
-                            name = "grupo"
-                           // onChange={e => 
-                            //this.setState({
-                              //  grupo: e.value
-                            //})}
+                            name = "ciclo_id"
+                            onChange={e => 
+                              this.filterDataCiclo(e.label)
+                            }
                             options = {this.state.dataCiclo}
                             className="basic-multi-select"
                             classNamePrefix="select"
@@ -118,11 +162,10 @@ class Grupo extends Component{
                     <div className="col-md-3">
                         <p className="bold">Periodo Escolar:</p>
                         <Select className="form-control"
-                            name = "grupo"
-                           // onChange={e => 
-                            //this.setState({
-                              //  grupo: e.value
-                            //})}
+                            name = "periodo_id"
+                            onChange={e => 
+                                this.filterDataPeriodo(e.label)
+                            }
                             options = {this.state.dataPeriodo}
                             className="basic-multi-select"
                             classNamePrefix="select"
@@ -135,17 +178,20 @@ class Grupo extends Component{
                         >{this.state.name} <i className={this.state.icon}></i></button>
                     </div>
                 </div>
-                <hr/>                    
+                <hr/>                
                 {
                     this.state.showForm?
                     <div>
-                        <GrupoForm  data edit={false}/>
+                        <GrupoForm data edit={false}/>
                     </div>:
                     null
                 }
                 {
                     this.state.showTable?
-                        <GrupoTable show={this.showForm} />:
+                        <GrupoTable 
+                            show={this.showForm}
+                            dataJson = {this.state.updateGrupo}
+                            getRequest = {this.getRequest}  />:
                     null
                 }
             </div>

@@ -41,8 +41,10 @@ class Nivelacion extends Component {
       .end((err, response)=>{
         const res = (JSON.parse(response.text)['success']);
         if(res){
-          console.log("Calificación de Nivelacion Actualizada");
-        } 
+          this.props.notificacion("Nivelación","Calificación Actualizada","success")
+        }else{
+          this.props.notificacion("Nivelación","No se pudo guardar la calificacion","error")
+        }
       });
   }
 

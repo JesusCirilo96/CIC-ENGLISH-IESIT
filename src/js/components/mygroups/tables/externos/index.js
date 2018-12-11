@@ -1,12 +1,14 @@
 import React, { Component} from "react";
 import request from 'superagent';
+import NotificationSystem from 'react-notification-system';
 
-import Parcial1 from "./parcial1";
-import Parcial2 from "./parcial2";
-import Parcial3 from "./parcial3";
-import Nivelacion from "./nivelacion";
-import Final from "./finales";
-import Extraordinario from "./extraordinario";
+import Parcial1 from "./parcial1"
+import Parcial2 from "./parcial2"
+import Parcial3 from "./parcial3"
+import Nivelacion from "./nivelacion"
+import Final from "./finales"
+import Extraordinario from "./extraordinario"
+import Alumno from "./alumno"
 
 class Index extends Component{
     constructor(){
@@ -15,6 +17,9 @@ class Index extends Component{
             days:[],
             dataTable:[]
         }
+        this.getAlumno = this.getAlumno.bind(this);
+        this.notificationSystem = React.createRef();
+        this.addNotification = this.addNotification.bind(this)
     }
     
    componentDidMount(){
@@ -22,6 +27,32 @@ class Index extends Component{
         .post('http://localhost:3000/getAlumnoExt')
         .send({
             id_grupo:this.props.data.GRUPO_EXTERNO_ID
+        })            
+        .set('Accept', /application\/json/)
+        .end((err, response)=>{
+            const res = (JSON.parse(response.text))
+            this.setState({
+                dataTable: res
+            });
+    });
+    }
+
+    addNotification(title,message,level){
+        const notification = this.notificationSystem.current;
+        notification.addNotification({
+            title:title,
+            message: message,
+            level: level,
+            position:'br'
+        });
+    };
+
+    getAlumno(){
+        request
+        .post('http://localhost:3000/getAlumnoInt')
+        .send({
+            id_grupo:this.props.data.GRUPO_ID,
+            id_param:"P"    
         })            
         .set('Accept', /application\/json/)
         .end((err, response)=>{
@@ -93,15 +124,20 @@ class Index extends Component{
             <li className="nav-item">
                 <a className="nav-link" id="pills-extraordinario-tab" data-toggle="pill" href="#pills-extraordinario" role="tab" aria-controls="pills-extraordinario" aria-selected="false" onClick={()=>{this.clickHeaders("N")}}>Extraordinario</a>
             </li>
+            <li className="nav-item">
+                <a className="nav-link" id="pills-alumno-tab" data-toggle="pill" href="#pills-alumno" role="tab" aria-controls="pills-alumno" aria-selected="false">Añadir Alumno</a>
+            </li>
             </ul>
             <div className="tab-content" id="pills-tabContent">
-                <div className="tab-pane fade show active" id="pills-first-parcial" role="tabpanel" aria-labelledby="pills-first-parcial-tab"> <Parcial1 dataTable={this.state.dataTable} />  </div>
-                <div className="tab-pane fade" id="pills-second-parcial" role="tabpanel" aria-labelledby="pills-second-parcial-tab"><Parcial2 dataTable={this.state.dataTable} /></div>
-                <div className="tab-pane fade" id="pills-third-parcial" role="tabpanel" aria-labelledby="pills-third-parcial-tab"><Parcial3 dataTable={this.state.dataTable} /></div>
-                <div className="tab-pane fade" id="pills-nivelacion" role="tabpanel" aria-labelledby="pills-nivelacion-tab"><Nivelacion dataTable={this.state.dataTable} /></div>
-                <div className="tab-pane fade" id="pills-finales" role="tabpanel" aria-labelledby="pills-finales-tab"><Final dataTable={this.state.dataTable} /></div>
-                <div className="tab-pane fade" id="pills-extraordinario" role="tabpanel" aria-labelledby="pills-extraordinario-tab"><Extraordinario dataTable={this.state.dataTable} /></div>
+                <div className="tab-pane fade show active" id="pills-first-parcial" role="tabpanel" aria-labelledby="pills-first-parcial-tab"> <Parcial1 dataTable={this.state.dataTable} notificacion={this.addNotification} />  </div>
+                <div className="tab-pane fade" id="pills-second-parcial" role="tabpanel" aria-labelledby="pills-second-parcial-tab"><Parcial2 dataTable={this.state.dataTable} notificacion={this.addNotification} /></div>
+                <div className="tab-pane fade" id="pills-third-parcial" role="tabpanel" aria-labelledby="pills-third-parcial-tab"><Parcial3 dataTable={this.state.dataTable} notificacion={this.addNotification} /></div>
+                <div className="tab-pane fade" id="pills-nivelacion" role="tabpanel" aria-labelledby="pills-nivelacion-tab"><Nivelacion dataTable={this.state.dataTable} notificacion={this.addNotification}/></div>
+                <div className="tab-pane fade" id="pills-finales" role="tabpanel" aria-labelledby="pills-finales-tab"><Final dataTable={this.state.dataTable} notificacion={this.addNotification}/></div>
+                <div className="tab-pane fade" id="pills-extraordinario" role="tabpanel" aria-labelledby="pills-extraordinario-tab"><Extraordinario dataTable={this.state.dataTable} notificacion={this.addNotification} /></div>
+                <div className="tab-pane fade" id="pills-alumno" role="tabpanel" aria-labelledby="pills-alumno-tab"><Alumno grupo_id = {this.props.data.GRUPO_EXTERNO_ID} get_alumno={this.getAlumno} notificacion={this.addNotification} /></div>
             </div>
+            <NotificationSystem ref={this.notificationSystem} />
         </div>
 
         );

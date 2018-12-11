@@ -41,8 +41,10 @@ class Final extends Component {
       .end((err, response)=>{
         const res = (JSON.parse(response.text)['success']);
         if(res){
-          console.log("Calificación de Nivelacion Actualizada");
-        } 
+          this.props.notificacion("Final","Calificación Actualizada","success")
+        }else{
+          this.props.notificacion("Final","No se pudo guardar la calificación","error")
+        }
       });
   }
 

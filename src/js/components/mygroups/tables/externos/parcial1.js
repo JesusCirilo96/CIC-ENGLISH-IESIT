@@ -51,8 +51,10 @@ class Parcial1 extends Component {
       .end((err, response)=>{
         const res = (JSON.parse(response.text)['success']);
         if(res){
-          console.log("Calificación del Parcial 1 Actualizada");
-        } 
+          this.props.notificacion("Primer Parcial","Calificación Actualizada","success")
+        }else{
+          this.props.notificacion("Primer Parciar","No se pudieron guardar los datos","error")
+        }
       });    
   }
 

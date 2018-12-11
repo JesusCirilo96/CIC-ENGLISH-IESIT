@@ -170,9 +170,9 @@ class Settings extends Component{
                                     <div className="col-md-12 input-group">
                                         <div className="custom-file">
                                             <input type="file" className="custom-file-input" name="picture" onChange={this._handleImageChange} id="inputGroupFile04"/>
-                                            <label className="custom-file-label" for="inputGroupFile04">Choose file</label>
+                                            <label className="custom-file-label">Choose file</label>
                                         </div>
-                                        <div class="input-group-append">
+                                        <div className="input-group-append">
                                             <button className="btn btn-outline-secondary" type="submit" onClick={this._handleSubmit}>Upload</button>
                                         </div>
                                     </div>

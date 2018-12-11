@@ -6,6 +6,7 @@ class Nivelacion extends Component {
 
   constructor(){
     super();
+  
 
     this.renderEditable = this.renderEditable.bind(this);
   }
@@ -41,18 +42,11 @@ class Nivelacion extends Component {
       .end((err, response)=>{
         const res = (JSON.parse(response.text)['success']);
         if(res){
-          console.log("Calificación de Nivelacion Actualizada");
-        } 
-      });
-  }
-
-  promedio(cal1, cal2,cal3){
-        var puntuacion = (cal1 + cal2 + cal3);
-        var nivelacion = "No"
-        if(puntuacion < 210 ){
-            nivelacion = "Si"
+          this.props.notificacion("Nivelación","Calificación de Nivelacion Actualizada","success")
+        }else{
+          this.props.notificacion("Nivelacion","No se Pudo actualizar la calificación","error")
         }
-        return nivelacion
+      });
   }
 
   promedioNum(cal1, cal2,cal3){
@@ -115,52 +109,30 @@ class Nivelacion extends Component {
                 Header:"Lic.",
                 accessor: "SIGLAS",
                 width: 100,
-              maxWidth: 100,
-              minWidth: 100
+                maxWidth: 100,
+                minWidth: 100
               },
               {
                 Header:"Nombre",
-                accessor: "NOMBRE_COMPLETO"
+                accessor: "NOMBRE_COMPLETO",
               },
               {
                 Header:"Promedio Parcial",
                 Cell: row =>(
-                this.promedioNum(
-                  (row.original.PARTICIPACION_PAR1 + row.original.TRABAJOS_PAR1 + row.original.EXAMEN_PAR1),
-                  (row.original.PARTICIPACION_PAR2 + row.original.TRABAJOS_PAR2 + row.original.EXAMEN_PAR2),
-                  (row.original.PARTICIPACION_PAR3 + row.original.TRABAJOS_PAR3 + row.original.EXAMEN_PAR3)
-                  )
-                ),
+                  this.promedioNum(row.original.PARCIAL1,row.original.PARCIAL2,row.original.PARCIAL3)),
                 width: 100,
                 maxWidth: 100,
                 minWidth: 100
               },
               {
-                Header:"Nivelacion",
-                Cell: row =>(
-                this.promedio(
-                  (row.original.PARTICIPACION_PAR1 + row.original.TRABAJOS_PAR1 + row.original.EXAMEN_PAR1),
-                  (row.original.PARTICIPACION_PAR2 + row.original.TRABAJOS_PAR2 + row.original.EXAMEN_PAR2),
-                  (row.original.PARTICIPACION_PAR3 + row.original.TRABAJOS_PAR3 + row.original.EXAMEN_PAR3)
-                  )
-                ),
-                width: 100,
-              maxWidth: 100,
-              minWidth: 100
-              },
-              {
                 Header:"Parcial",
                 accessor: "NIVELACION_PAR",
                 Cell: row =>(
-                  this.parcial(
-                    (row.original.PARTICIPACION_PAR1 + row.original.TRABAJOS_PAR1 + row.original.EXAMEN_PAR1),
-                    (row.original.PARTICIPACION_PAR2 + row.original.TRABAJOS_PAR2 + row.original.EXAMEN_PAR2),
-                    (row.original.PARTICIPACION_PAR3 + row.original.TRABAJOS_PAR3 + row.original.EXAMEN_PAR3)
-                  )
+                  this.parcial(row.original.PARCIAL1,row.original.PARCIAL2,row.original.PARCIAL3)
                 ),
                 width: 100,
-              maxWidth: 100,
-              minWidth: 100
+                maxWidth: 100,
+                minWidth: 100
               },
               {
                 Header:"Calificacion",
@@ -173,12 +145,7 @@ class Nivelacion extends Component {
               {
                 Header:"Promedio",
                 Cell: row =>
-                this.promedioNivelacion(
-                  (row.original.PARTICIPACION_PAR1 + row.original.TRABAJOS_PAR1 + row.original.EXAMEN_PAR1),
-                  (row.original.PARTICIPACION_PAR2 + row.original.TRABAJOS_PAR2 + row.original.EXAMEN_PAR2),
-                  (row.original.PARTICIPACION_PAR3 + row.original.TRABAJOS_PAR3 + row.original.EXAMEN_PAR3),
-                  String(row.original.CAL_NIVELACION)
-                ),
+                  this.promedioNivelacion(row.original.PARCIAL1,row.original.PARCIAL2,row.original.PARCIAL3,String(row.original.CAL_NIVELACION)),
                 width:100,
                 maxWidth: 100,
                 minWidth: 100
@@ -223,6 +190,3 @@ class Nivelacion extends Component {
     }
   }
 export default Nivelacion;
-
-
-
