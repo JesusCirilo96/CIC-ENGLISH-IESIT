@@ -11,7 +11,6 @@ import store from '../store';
 
 //componets global
 import Header from './global/Header';
-import Footer from './global/footer';
 import Page404 from '../components/Page404';
 
 //login
@@ -19,6 +18,7 @@ import LoginForm from '../components/login/Login';
 
 //Header
 import Mygroups from './mygroups';
+import Teachers from './teachers';
 import Students from './students';
 import Settings from './settings';
 
@@ -144,6 +144,7 @@ const Routes = () =>(
         <PrivateRoute exact path="/home" component={Home}/>
         <PrivateRoute exact path="/catalogues" component={Catalogo}/>     
         <PrivateRoute exact path="/mygroups" component={Mygroups}/>
+        <PrivateRoute exact path="/teachers" component={Teachers}/>
         <PrivateRoute exact path="/students" component={Students}/>
         <PrivateRoute exact path="/settings" component={Settings}/>
 

@@ -27,6 +27,11 @@ class Header extends Component{
                      tag: "Mis Grupos",
                      icon:"fas fa-chalkboard-teacher"
                  },
+                 {
+                    route: "/teachers",
+                    tag:"Docentes",
+                    icon:"fas fa-chalkboard-teacher"
+                },
                 {
                     route: "/students",
                     tag:"Alumnos",

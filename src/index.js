@@ -1,5 +1,6 @@
 import './css/body.css';
 import './formUtil/util.css';
+import './css/cardTeacher.css'
 import './formUtil/main.css';
 import './css/404.css';
 

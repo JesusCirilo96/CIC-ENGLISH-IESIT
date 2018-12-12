@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import Footer from '../global/footer';
 
 class Login extends Component {
   constructor(){
@@ -74,6 +75,7 @@ class Login extends Component {
             </div>
           </div>
         </div>
+        <Footer/>
       </div>
     );
   }
