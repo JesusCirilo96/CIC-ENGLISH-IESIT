@@ -17,8 +17,7 @@ class Alumno extends Component{
             licenciatura:'',
             semestre:'',
             grupo:'',
-            email:'',
-            msg:false
+            email:''
         }
     }
 
@@ -73,35 +72,37 @@ class Alumno extends Component{
           })
           .set('Accept', /application\/json/)
           .end((err, response)=>{
-            const res = (JSON.parse(response.text)['success']);
+            const res = (JSON.parse(response.text)['data'].success);
+            const msg = (JSON.parse(response.text)['data'].msg);
             if(res){
-              this.setState({
-                msg : true,
-              });
-              this.props.get_alumno()
+                this.props.notificacion("Alumno",msg,"success")
+                this.addAlumno(this.state.matricula)
+                this.props.get_alumno()
+            }else{
+                this.props.notificacion("Alumno",msg,"error")
             } 
           });
           e.preventDefault();
       }
 
-      addAlumno (e){
+      addAlumno (matricula){
         request
           .post('http://localhost:3000/alumnogrupoint')
           .send({
-              matricula: this.state.matriculaEx,
+              matricula: matricula,
               grupo_id: this.props.grupo_id
           })
           .set('Accept', /application\/json/)
           .end((err, response)=>{
-            const res = (JSON.parse(response.text)['success']);
+            const res = (JSON.parse(response.text)['data'].success);
+            const msg = (JSON.parse(response.text)['data'].msg);
             if(res){
-              this.setState({
-                msg : true,
-              });
-              this.props.get_alumno()
-            } 
+                this.props.notificacion("Alumno",msg,"success")
+                this.props.get_alumno()
+            }else{
+                this.props.notificacion("Alumno",msg,"error")
+            }
           });
-          e.preventDefault();
       }
      
 
@@ -123,23 +124,15 @@ class Alumno extends Component{
             {value:'9', label:'Noveno'},
             {value:'10', label:'Decimo'}
         ]
-
         const estado = [
             {value: '0', label:'Activo'},
             {value: '1', label:'Inactivo'}
         ]
         return(
-            <div className="contenedor-tabla">
+            <div className="">
             <div className="col-md-12">
                 <div className="row">
                     <div className="form-settings col-md-12">
-                    {
-                        this.state.msg ?
-                        <div className="alert alert-primary" role="alert">
-                        Alumno Agregado Correctamente...
-                        </div>:
-                        null
-                    }
                         <div className="row">
                             <div className="col-md-6">
                             <p className="bold">AGREGA UN ALUMNO.</p>
@@ -159,7 +152,7 @@ class Alumno extends Component{
                             <div className="col-md-2">
                                 <p>add</p>
                                 <button className="btn btn-primary" onClick={e=>{
-                                    this.addAlumno(e);
+                                    this.addAlumno(this.state.matriculaEx)
                                 }}>Añadir</button>
                             </div>
                         </div>

@@ -109,7 +109,8 @@ class Extraordinario extends Component {
                 pageText = 'Pagina'
                 ofText = 'de'
                 rowsText = 'Registros'
-                defaultPageSize = {10}
+                defaultPageSize = {15}
+                className="-highlight"
                 columns = {columns} data = {this.props.dataTable}>
             </ReactTable>      
           </div>

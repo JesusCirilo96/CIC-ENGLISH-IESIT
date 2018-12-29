@@ -1,13 +1,18 @@
 import React, { Component} from "react";
 import request from 'superagent';
 
+import Info from './info';
+
 class Teachers extends Component{
 
     constructor(){
         super();
         this.state={
-            dataDocente:[]
+            dataDocente:[],
+            showForm:true,
+            showTable:false
         }
+        this.showForm = this.showForm.bind(this)
     }
     componentDidMount(){
         request
@@ -18,25 +23,50 @@ class Teachers extends Component{
               dataDocente: data
             });
           });
-      }
+    }
+
+    
+    showForm(){
+        this.setState ({
+            showForm : !this.state.showForm,
+            showTable : !this.state.showTable
+        })
+    }
+    mail(email){
+        if(email !== null && email !== ''){
+            return(
+                <span className="post"><i className="far fa-envelope"></i>  {email}</span>
+            )
+        }
+    }
+    
+    phone(phone){
+        if(phone !== null && phone !== ''){
+            return(
+                <span className="post"><i className="fas fa-mobile-alt"></i>  {phone}</span>
+            )
+        }
+    }
     render(){
         return(
             <div className="contenedor-tabla">
+            {
+            this.state.showForm?
                 <div className="content mt-40">
-                    <h3 className="text-center">Hover Effect Style : Demo - 16</h3>
+                    <h3 className="text-center">Docentes</h3>
                     <div className="row mt-30">
 
                         {
                         this.state.dataDocente.map((data, key)=>
-                            <div className="col-md-3 col-sm-6 margin-bottom">
+                            <div key={key} className="col-md-3 col-sm-6 margin-bottom">
                                 <div className="box16">
                                     <img src={data.PICTURE}/>
                                     <div className="box-content">
                                         <h3 className="title">{data.NOMBRE}</h3>
-                                        <span className="post"><i className="fas fa-mobile-alt"></i>  {data.TELEFONO}</span>
-                                        <span className="post"><i className="far fa-envelope"></i>  {data.EMAIL}</span>
+                                        {this.phone(data.TELEFONO)}
+                                        {this.mail(data.EMAIL)}                                    
                                         <ul className="social">
-                                            <li><a href="#"><i className="fas fa-info"></i></a></li>
+                                            <li><a href="#" onClick={this.showForm}><i className="fas fa-info"></i></a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -46,6 +76,13 @@ class Teachers extends Component{
 
                     </div>
                 </div>
+                :null
+            }
+            {
+                this.state.showTable?
+                <Info showForm={this.showForm}/>
+                :null
+            }
             </div>
         );
     }

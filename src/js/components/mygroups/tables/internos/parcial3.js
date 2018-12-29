@@ -28,7 +28,7 @@ class Parcial3 extends Component {
     );
   }
 
-  saveParcial(asis, part, trab, exam, parc, matr, grupo){
+  saveParcial(asis, part, trab, exam, parc, matr, grupo,nombre){
     var regex = /(\d+)/g;
     
     asis = asis.match(regex);
@@ -51,11 +51,29 @@ class Parcial3 extends Component {
       .end((err, response)=>{
         const res = (JSON.parse(response.text)['success']);
         if(res){
-          this.props.notificacion("Tercer Parcial","Calificación Actualizada","success")
+          this.props.notificacion("Tercer Parcial","La Calificación de "+nombre+" Fue Actualizada","success")
         }else{
           this.props.notificacion("Tercer Parcial","No se pudieron guardar los datos","error")
         }
       });    
+  }
+
+  promedioNum(cal1, cal2,part,trab,exam){
+    var regex = /(\d+)/g
+
+    part = part.match(regex)
+    trab = trab.match(regex)
+    exam = exam.match(regex)
+
+    part = parseInt(part)
+    trab = parseInt(trab)
+    exam = parseInt(exam)
+    var cal3 = part + trab + exam
+
+    var puntuacion = (cal1 + cal2 + cal3)
+    puntuacion = puntuacion/3
+    puntuacion = Math.round(puntuacion * 10)/10
+    return puntuacion
   }
 
     render() {
@@ -126,6 +144,21 @@ class Parcial3 extends Component {
               maxWidth: 100,
               minWidth: 100
               },
+              {
+                Header:"Promedio Parcial",
+                Cell: row =>(
+                this.promedioNum(
+                  (row.original.PARTICIPACION_PAR1 + row.original.TRABAJOS_PAR1 + row.original.EXAMEN_PAR1),
+                  (row.original.PARTICIPACION_PAR2 + row.original.TRABAJOS_PAR2 + row.original.EXAMEN_PAR2),
+                  String(row.original.PARTICIPACION_PAR3),
+                  String(row.original.TRABAJOS_PAR3),
+                  String(row.original.EXAMEN_PAR3),
+                  )
+                ),
+                width: 100,
+                maxWidth: 100,
+                minWidth: 100
+              },
             {
               Header:"Acciones",
               Cell: props =>{
@@ -140,7 +173,8 @@ class Parcial3 extends Component {
                         String(props.original.EXAMEN_PAR3),
                         '3',
                         props.original.ALUMNO_MATRICULA,
-                        props.original.GRUPO_ID
+                        props.original.GRUPO_ID,
+                        props.original.NOMBRE_COMPLETO
                       )
                     }}
                   >Guardar</button>
@@ -162,7 +196,8 @@ class Parcial3 extends Component {
                 pageText = 'Pagina'
                 ofText = 'de'
                 rowsText = 'Registros'
-                defaultPageSize = {10}
+                defaultPageSize = {15}
+                className="-highlight"
                 columns = {columns} data = {this.props.dataTable}>
             </ReactTable>      
           </div>

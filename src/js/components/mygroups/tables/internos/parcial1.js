@@ -2,6 +2,9 @@ import React, { Component} from "react";
 import ReactTable from "react-table";
 import request from 'superagent';
 
+import {SplitButton} from 'primereact/splitbutton';
+
+
 class Parcial1 extends Component {  
 
   constructor(){
@@ -28,7 +31,7 @@ class Parcial1 extends Component {
     );
   }
 
-  saveParcial(asis, part, trab, exam, parc, matr, grupo){
+  saveParcial(asis, part, trab, exam, parc, matr, grupo, nombre){
     var regex = /(\d+)/g;
     
     asis = asis.match(regex);
@@ -51,7 +54,7 @@ class Parcial1 extends Component {
       .end((err, response)=>{
         const res = (JSON.parse(response.text)['success'])
         if(res){
-          this.props.notificacion("Primer Parcial","Calificación Actualizada","success")
+          this.props.notificacion("Primer Parcial","La Calificación de "+nombre+" Fue Actualizada","success")
         }else{
           this.props.notificacion("Primer Parcial","No se pudieron guardar los datos","error")
         }
@@ -60,6 +63,22 @@ class Parcial1 extends Component {
 
 
     render() {
+        const button =[
+          {
+            label: 'Update', 
+            icon: 'pi pi-refresh', 
+            command: (e) => {
+                this.growl.show({severity:'success', summary:'Updated', detail:'Data Updated'});
+            }
+          },
+          {
+            label: 'Delete', 
+            icon: 'pi pi-times',
+            command: (e) => {
+                this.growl.show({ severity: 'success', summary: 'Delete', detail: 'Data Deleted' });
+            }
+          }
+        ];
         const columns = [
                 {
                   Header:"Semestre",
@@ -129,7 +148,9 @@ class Parcial1 extends Component {
                   Header:"Acciones",
                   Cell: props =>{
                     return(
-                      <button className="btn btn-light" 
+                      <SplitButton  className="btn btn-light" 
+                        label="Guardar"
+                        icon="pi pi-plus"
                         onClick={()=>{
                           this.saveParcial(
                             String(props.original.ASISTENCIA_PAR1),
@@ -138,10 +159,12 @@ class Parcial1 extends Component {
                             String(props.original.EXAMEN_PAR1),
                             '1',
                             props.original.ALUMNO_MATRICULA,
-                            props.original.GRUPO_ID
+                            props.original.GRUPO_ID,
+                            props.original.NOMBRE_COMPLETO
                           )
                         }}
-                      >Guardar</button>
+                        model={button}
+                      ></SplitButton >
                     )
                   },
                   width: 100,
@@ -160,9 +183,13 @@ class Parcial1 extends Component {
                 pageText = 'Pagina'
                 ofText = 'de'
                 rowsText = 'Registros'
-                defaultPageSize = {10}
+                defaultPageSize = {15}
+                className="-highlight"
                 columns = {columns} data = {this.props.dataTable}>
             </ReactTable>      
+            <SplitButton label="Save" icon="pi pi-plus" onClick={()=>{
+                          this.props.notificacion("Prueba","Si Agarra","success")
+                        }} model={button} className="p-button-secondary" style={{marginRight: '.25em'}}></SplitButton>
           </div>
           
       );

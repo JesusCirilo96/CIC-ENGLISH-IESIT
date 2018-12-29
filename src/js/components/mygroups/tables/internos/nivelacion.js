@@ -29,7 +29,7 @@ class Nivelacion extends Component {
     );
   }
 
-  saveNivelacionInterno(calificacion,matricula,grupo){
+  saveNivelacionInterno(calificacion,matricula,grupo,nombre,parcial){
     request
       .post('http://localhost:3000/nivelacionint')
       .send({
@@ -42,9 +42,9 @@ class Nivelacion extends Component {
       .end((err, response)=>{
         const res = (JSON.parse(response.text)['success']);
         if(res){
-          this.props.notificacion("Nivelación","Calificación de Nivelacion Actualizada","success")
+          this.props.notificacion("Nivelación","La Calificación de nivelación de "+nombre+" Fue Actualizada","success")
         }else{
-          this.props.notificacion("Nivelacion","No se Pudo actualizar la calificación","error")
+          this.props.notificacion("Nivelación","No se pudieron guardar los datos","error")
         }
       });
   }
@@ -82,10 +82,10 @@ class Nivelacion extends Component {
     if(promedio < 210){
       if(cal1 < cal2 && cal1 < cal3){
         promedio = (cal2 + cal3 + calNivelacion)/3
-      }else if(cal2 < cal3){
+      }else if(cal2 < cal1 && cal2 < cal3){
         promedio = (cal1 + cal3 + calNivelacion)/3
-      }else{
-        promedio = (cal2 + cal3 + calNivelacion)/3
+      }else if(cal3 < cal1 && cal3 < cal2){
+        promedio = (cal1 + cal2 + calNivelacion)/3
       }
     }else{
       promedio = promedio/3
@@ -159,7 +159,9 @@ class Nivelacion extends Component {
                     this.saveNivelacionInterno(
                       props.original.CAL_NIVELACION,
                       props.original.ALUMNO_MATRICULA,
-                      props.original.GRUPO_ID
+                      props.original.GRUPO_ID,
+                      props.original.NOMBRE_COMPLETO,
+                      props.original.NIVELACION_PAR
                     );
                     }}
                   >Guardar</button>
@@ -181,7 +183,8 @@ class Nivelacion extends Component {
                 pageText = 'Pagina'
                 ofText = 'de'
                 rowsText = 'Registros'
-                defaultPageSize = {10}
+                defaultPageSize = {15}
+                className="-highlight"
                 columns = {columns} data = {this.props.dataTable}>
             </ReactTable>      
           </div>

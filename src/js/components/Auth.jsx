@@ -17,13 +17,14 @@ import Page404 from '../components/Page404';
 import LoginForm from '../components/login/Login';
 
 //Header
+import Home from './Home';
 import Mygroups from './mygroups';
 import Teachers from './teachers';
 import Students from './students';
 import Settings from './settings';
+import Inscripcion from './inscripciones';
 
 //catalogos
-import Home from './Home';
 import Catalogo from './catalogo/Catalogo';
 
 var level;
@@ -147,6 +148,7 @@ const Routes = () =>(
         <PrivateRoute exact path="/teachers" component={Teachers}/>
         <PrivateRoute exact path="/students" component={Students}/>
         <PrivateRoute exact path="/settings" component={Settings}/>
+        <PrivateRoute exact path="/inscripcion" component={Inscripcion}/>
 
         <Route component={Page404}/>
     </Switch>

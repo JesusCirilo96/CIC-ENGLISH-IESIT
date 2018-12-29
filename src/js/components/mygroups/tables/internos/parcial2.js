@@ -28,7 +28,7 @@ class Parcial2 extends Component {
     );
   }
 
-  saveParcial(asis, part, trab, exam, parc, matr, grupo){
+  saveParcial(asis, part, trab, exam, parc, matr, grupo, nombre){
     var regex = /(\d+)/g;
     
     asis = asis.match(regex);
@@ -51,7 +51,7 @@ class Parcial2 extends Component {
       .end((err, response)=>{
         const res = (JSON.parse(response.text)['success']);
         if(res){
-          this.props.notificacion("Segundo Parcial","Calificación Actualizada","success")
+          this.props.notificacion("Segundo Parcial","La Calificación de "+nombre+" Fue Actualizada","success")
         }else{
           this.props.notificacion("Segundo Parcial","No se pudieron guardar los datos","error")
         }
@@ -138,7 +138,8 @@ class Parcial2 extends Component {
                         String(props.original.EXAMEN_PAR2),
                         '2',
                         props.original.ALUMNO_MATRICULA,
-                        props.original.GRUPO_ID
+                        props.original.GRUPO_ID,
+                        props.original.NOMBRE_COMPLETO
                       )
                     }}
                   >Guardar</button>
@@ -160,7 +161,8 @@ class Parcial2 extends Component {
                 pageText = 'Pagina'
                 ofText = 'de'
                 rowsText = 'Registros'
-                defaultPageSize = {10}
+                defaultPageSize = {15}
+                className="-highlight"
                 columns = {columns} data = {this.props.dataTable}>
             </ReactTable>      
           </div>

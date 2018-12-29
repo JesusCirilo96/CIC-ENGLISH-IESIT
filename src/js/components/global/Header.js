@@ -102,12 +102,13 @@ class Header extends Component{
                             <li className="nav-item dropdown">
                                 <a className="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"></a>
                                 <div className="dropdown-menu">
-                                    <Link className="dropdown-item" to="/settings">Mi perfil <i className="fas fa-cogs"></i></Link>
+                                    <Link className="dropdown-item" to="/settings"><i className="fas fa-cogs"></i> Mi perfil</Link>
+                                    <Link className="dropdown-item" to="/inscripcion"><i className="fas fa-user-plus"></i> Inscripciones</Link>
                                     <div className="dropdown-divider"></div>
-                                    <Link className="dropdown-item" to="/"
+                                    <a className="dropdown-item"
                                         onClick={()=> this.props.fakeAuth.sigout(()=> this.props.history.push('/'))}>
-                                        Salir <i className="fas fa-sign-out-alt"></i>
-                                    </Link>
+                                        <i className="fas fa-sign-out-alt"></i> Salir
+                                    </a>
                                 </div>
                             </li>
                         </ul>

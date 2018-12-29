@@ -162,7 +162,7 @@ class Index extends Component{
                 <div className="tab-pane fade" id="pills-nivelacion" role="tabpanel" aria-labelledby="pills-nivelacion-tab"><Nivelacion dataTable={this.studentsNivelacion()} notificacion={this.addNotification} /></div>
                 <div className="tab-pane fade" id="pills-finales" role="tabpanel" aria-labelledby="pills-finales-tab"><Final dataTable={this.state.dataTable} notificacion={this.addNotification}/></div>
                 <div className="tab-pane fade" id="pills-extraordinario" role="tabpanel" aria-labelledby="pills-extraordinario-tab"><Extraordinario dataTable={this.state.dataTable} notificacion={this.addNotification} /></div>
-                <div className="tab-pane fade" id="pills-alumno" role="tabpanel" aria-labelledby="pills-alumno-tab"><Alumno grupo_id = {this.props.data.GRUPO_ID} get_alumno={this.getAlumno} /></div>
+                <div className="tab-pane fade" id="pills-alumno" role="tabpanel" aria-labelledby="pills-alumno-tab"><div className="contenedor-tabla"><Alumno grupo_id = {this.props.data.GRUPO_ID} get_alumno={this.getAlumno} notificacion={this.addNotification} /></div></div>
             </div>
             <NotificationSystem ref={this.notificationSystem} />
         </div>
