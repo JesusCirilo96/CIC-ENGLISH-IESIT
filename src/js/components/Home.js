@@ -2,6 +2,8 @@ import React, {Component} from "react"
 import store from '../store'
 import NotificationSystem from 'react-notification-system';
 
+import {Button} from 'primereact/button';
+
 class Home extends Component{
     constructor(){
         super();
@@ -38,6 +40,8 @@ class Home extends Component{
             <div className="contenedor-tabla">
                 <h1>Home</h1>
                 <button onClick={this.addNotification}>Add notification</button>
+
+                <Button label="Click" icon="pi pi-check" iconPos="right" />
                 <NotificationSystem ref={this.notificationSystem} />
             </div>
         );

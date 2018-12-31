@@ -12,8 +12,7 @@ class Inscripcion extends Component{
         this.state = {
             dataGrupos:[],
             showForm: true,
-            showTable: false,
-            grupo_id:''
+            showTable: false
         };
         
 

@@ -2,7 +2,8 @@ import React, { Component} from "react";
 import ReactTable from "react-table";
 import request from 'superagent';
 
-import {SplitButton} from 'primereact/splitbutton';
+
+import {Button} from 'primereact/button';
 
 
 class Parcial1 extends Component {  
@@ -148,9 +149,11 @@ class Parcial1 extends Component {
                   Header:"Acciones",
                   Cell: props =>{
                     return(
-                      <SplitButton  className="btn btn-light" 
+                      <Button
+                        className="p-button-secondary"
                         label="Guardar"
-                        icon="pi pi-plus"
+                        icon="pi pi-check"
+                        iconPos="right"
                         onClick={()=>{
                           this.saveParcial(
                             String(props.original.ASISTENCIA_PAR1),
@@ -163,15 +166,11 @@ class Parcial1 extends Component {
                             props.original.NOMBRE_COMPLETO
                           )
                         }}
-                        model={button}
-                      ></SplitButton >
+                      />
                     )
-                  },
-                  width: 100,
-                  maxWidth: 100,
-                  minWidth: 100
+                  },                  
+                  width: 120
                 }
-            
               ];
         return (
           <div className="all-table">
@@ -185,11 +184,9 @@ class Parcial1 extends Component {
                 rowsText = 'Registros'
                 defaultPageSize = {15}
                 className="-highlight"
+                showPaginationBottom = {false}
                 columns = {columns} data = {this.props.dataTable}>
             </ReactTable>      
-            <SplitButton label="Save" icon="pi pi-plus" onClick={()=>{
-                          this.props.notificacion("Prueba","Si Agarra","success")
-                        }} model={button} className="p-button-secondary" style={{marginRight: '.25em'}}></SplitButton>
           </div>
           
       );
