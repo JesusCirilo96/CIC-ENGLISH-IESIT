@@ -1,5 +1,6 @@
-import React, { Component} from "react";
-
+import React, { Component} from 'react';
+import store from '../../../store';
+import request from 'superagent';
 import TableExternos from '../tables/externos';
 
 let datos
@@ -9,10 +10,22 @@ class Externos extends Component{
         super();
         this.state={
             showForm: true,
-            showTable: false
+            showTable: false,
+            grupoExterno:[]
         };
 
         this.showForm = this.showForm.bind(this)
+    }
+
+    componentDidMount(){
+        request
+        .post('http://localhost:3000/getgroupext')
+        .send({"clave":store.getState().teacher[0].id})
+        .set('Accept', /application\/json/)
+        .end((err, response)=>{
+            const res = (JSON.parse(response.text))
+            this.setState({grupoExterno:res})
+        });
     }
 
     showForm(){
@@ -28,11 +41,11 @@ class Externos extends Component{
             {
                 this.state.showForm?
                     <div className="col-md-12 contenedor-grupos">
-                        <strong><p>Grupos: {this.props.data.length}</p></strong>
+                        <strong><p>Grupos: {this.state.grupoExterno.length}</p></strong>
                         <div className="tabla">
                             <div className="row">
                                 {
-                                    this.props.data.map((data,i) =>
+                                    this.state.grupoExterno.map((data,i) =>
                                     <div key={i} className="col-md-3" onClick={e=>{
                                         datos = data
                                         this.showForm();

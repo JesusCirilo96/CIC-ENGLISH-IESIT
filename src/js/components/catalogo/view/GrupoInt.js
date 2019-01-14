@@ -5,26 +5,42 @@ import GrupoTable from '../tables/GrupoIntTable';
 import Select from 'react-select';
 import request from 'superagent';
 
+import {Toolbar} from 'primereact/toolbar'
+import {Button} from 'primereact/button'
+import {AutoComplete} from 'primereact/autocomplete'
+
 class Grupo extends Component{
 
     constructor(){
         super();
         this.state = {
+            docente:"",
             dataDocente:[],
-            dataCiclo:[],
-            dataPeriodo:[],
+            filteredDocente:null,
             dataGrupo:[],
             updateGrupo:[],
             updateDocente:[],
-            updateCiclo:[],
             showForm: false,
             showTable:true,
             name: "Nuevo",
-            icon:"fas fa-plus-circle"
+            icon:"pi pi-plus",
+            style:"",
+            disabledSave:"disabled",
+            disabledUpdate:"disabled"
         }
 
         this.showForm = this.showForm.bind(this)
         this.getRequest = this.getRequest.bind(this)
+        this.filterDocente = this.filterDocente.bind(this)
+    }
+
+    filterDocente(event) {
+        setTimeout(() => {
+            var results = this.state.dataDocente.filter((docente) => {
+                return docente.name.toLowerCase().startsWith(event.query.toLowerCase());
+            });
+            this.setState({ filteredDocente: results });
+        }, 250);
     }
 
     getRequest(){
@@ -36,35 +52,25 @@ class Grupo extends Component{
         .set('Accept', /application\/json/)
         .end((err, response)=>{
             const res = (JSON.parse(response.text))
-            this.setState({dataGrupo:res, updateGrupo:res, updateDocente:res,updateCiclo:res})
+            this.setState({dataGrupo:res, updateGrupo:res, updateDocente:res})
         });
     }
 
     filterData(docenteFilter){
-        var updatedList = this.state.dataGrupo;
-        updatedList = updatedList.filter(function(item){
-          return item.NOMBRE_DOCENTE.toLowerCase().search(
-            docenteFilter.toLowerCase()) !== -1 ;
-        });
-        this.setState({updateDocente: updatedList, updateGrupo:updatedList});
-    }
-    
-    filterDataCiclo(cicloFilter){
-        var updatedList = this.state.updateDocente;
-        updatedList = updatedList.filter(function(item){
-          return item.CICLO_ESCOLAR.toLowerCase().search(
-            cicloFilter.toLowerCase()) !== -1 ;
-        });
-        this.setState({updateCiclo: updatedList, updateGrupo:updatedList});
-    }
-
-    filterDataPeriodo(periodoFilter){
-        var updatedList = this.state.updateCiclo;
-        updatedList = updatedList.filter(function(item){
-          return item.PERIODO_ESCOLAR.toLowerCase().search(
-            periodoFilter.toLowerCase()) !== -1 ;
-        });
-        this.setState({updateGrupo: updatedList});
+        this.setState({docente: docenteFilter})
+        if(docenteFilter === undefined){
+            this.setState({
+                updateGrupo:this.state.dataGrupo
+            })
+        }else{
+            console.log(docenteFilter);
+            var updatedList = this.state.dataGrupo;
+            updatedList = updatedList.filter(function(item){
+            return item.NOMBRE_DOCENTE.toLowerCase().search(
+                docenteFilter.toLowerCase()) !== -1 ;
+            });
+            this.setState({updateDocente: updatedList, updateGrupo:updatedList});
+        }
     }
     
     componentDidMount(){
@@ -76,34 +82,11 @@ class Grupo extends Component{
                 const data = JSON.parse(response.text);
                 var docente = []
                 for(var key in data){
-                    docente.push({'value':data[key].DOCENTE_ID,'label':data[key].NOMBRE_COMPLETO})
+                    //docente.push({'value':data[key].DOCENTE_ID,'label':data[key].NOMBRE_COMPLETO})
+                    docente.push({'name':data[key].NOMBRE_COMPLETO})
                 }
                 this.setState({
                 dataDocente: docente
-                });
-            });
-            request
-            .get('http://localhost:3000/cicloescolar')
-            .end((err, response)=>{
-                const data = JSON.parse(response.text);
-                var ciclo = []
-                for(var key in data){
-                    ciclo.push({'value':data[key].CICLO_ESCOLAR_ID,'label':data[key].NOMBRE})
-                }
-                this.setState({
-                    dataCiclo: ciclo
-                });
-            });
-            request
-            .get('http://localhost:3000/periodoescolar')
-            .end((err, response)=>{
-                const data = JSON.parse(response.text);
-                var periodo = []
-                for(var key in data){
-                    periodo.push({'value':data[key].PERIODO_ID,'label':data[key].NOMBRE})
-                }
-                this.setState({
-                dataPeriodo: periodo
                 });
             });
         }
@@ -117,13 +100,17 @@ class Grupo extends Component{
 
         if(this.state.showForm == false){
             this.setState({
-                name:"Registros",
-                icon:"fas fa-arrow-circle-left"
+                name:"Cancelar",
+                icon:"pi pi-times",
+                style:"p-button-danger",
+                disabledSave:""
             })
         }else{
             this.setState({
                 name:"Nuevo",
-                icon:"fas fa-plus-circle"
+                icon:"pi pi-plus",
+                style:"",
+                disabledSave:"disabled"
             })
         }
        
@@ -134,51 +121,18 @@ class Grupo extends Component{
         return(
             <div className="col-md-12">
             <br></br>
-                <div className="row">
-                    <div className="col-md-4">
-                        <p className="bold">Docente:</p>
-                        <Select className="form-control"
-                            name = "docente"
-                            onChange={e =>
-                                this.filterData(e.label)
-                            }
-                            options = {this.state.dataDocente}
-                            className="basic-multi-select"
-                            classNamePrefix="select"
-                        />
-                    </div>
-                    <div className="col-md-3">
-                        <p className="bold">Ciclo Escolar:</p>
-                        <Select className="form-control"
-                            name = "ciclo_id"
-                            onChange={e => 
-                              this.filterDataCiclo(e.label)
-                            }
-                            options = {this.state.dataCiclo}
-                            className="basic-multi-select"
-                            classNamePrefix="select"
-                        />
-                    </div>
-                    <div className="col-md-3">
-                        <p className="bold">Periodo Escolar:</p>
-                        <Select className="form-control"
-                            name = "periodo_id"
-                            onChange={e => 
-                                this.filterDataPeriodo(e.label)
-                            }
-                            options = {this.state.dataPeriodo}
-                            className="basic-multi-select"
-                            classNamePrefix="select"
-                        />
-                    </div>
-                    <div className="col-md-2">
-                        <p className="bold">Nuevo:</p>
-                        <button className="btn btn-outline-primary"
-                            onClick={e=>{this.showForm(e)}}
-                        >{this.state.name} <i className={this.state.icon}></i></button>
-                    </div>
+            <Toolbar>
+                <div className="p-toolbar-group-left">
+                    <Button className={this.state.style} label={this.state.name} icon={this.state.icon} style={{marginRight:'.25em'}} onClick={e=>{this.showForm(e)}}/>
+                    <i className="pi pi-bars p-toolbar-separator" style={{marginRight:'.25em'}} />
+                    <Button className="p-button-warning" label="Save" icon="pi pi-check" style={{marginRight:'.25em'}} disabled={this.state.disabledSave} />
+                    <Button label="Update" icon="pi pi-upload" className="p-button-success" disabled={this.state.disabledUpdate}/>
                 </div>
-                <hr/>                
+                <div className="p-toolbar-group-right">
+                    <AutoComplete value={this.state.docente} suggestions={this.state.filteredDocente} completeMethod={this.filterDocente} field="name"
+                        size={30} placeholder="Filtrar docente" minLength={1} onChange={(e) => this.filterData(e.value)} />
+                </div>
+            </Toolbar>
                 {
                     this.state.showForm?
                     <div>
@@ -200,3 +154,19 @@ class Grupo extends Component{
 }
 
 export default Grupo;
+/*
+<div className="row">
+                    <div className="col-md-4">
+                        <p className="bold">Docente:</p>
+                        <Select className="form-control"
+                            name = "docente"
+                            onChange={e =>
+                                this.filterData(e.label)
+                            }
+                            options = {this.state.dataDocente}
+                            className="basic-multi-select"
+                            classNamePrefix="select"
+                        />
+                    </div>
+                </div>
+                <hr/>       */        

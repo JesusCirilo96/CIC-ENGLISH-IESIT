@@ -30,9 +30,10 @@
     "style-loader": "^0.23.1",
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.2",
-    "webpack-dev-server": "^3.1.9"
+    "webpack-dev-server": "^3.1.14"
   },
   "dependencies": {
+    "bulma": "^0.7.2",
     "classnames": "^2.2.6",
     "express": "^4.16.3",
     "file-loader": "^3.0.1",

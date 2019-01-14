@@ -1,9 +1,11 @@
 import React, {Component} from 'react';
 import NotificationSystem from 'react-notification-system';
 import ReactTable from 'react-table';
-import request from 'superagent'
-
-import Alumno from '../mygroups/tables/internos/alumno';
+import request from 'superagent';
+import Alumno from './inscripcion';
+import {Dialog} from 'primereact/dialog';
+import {Button} from 'primereact/button'; 
+import Select from 'react-select';
 
 class Inscripcion extends Component{
     constructor(){
@@ -12,7 +14,11 @@ class Inscripcion extends Component{
         this.state = {
             dataGrupos:[],
             showForm: true,
-            showTable: false
+            showTable: false,
+            visible: false,
+            grupo_id: '',
+            matricula:'',
+            nroAlumnos: 0
         };
         
 
@@ -20,13 +26,25 @@ class Inscripcion extends Component{
         this.notificationSystem = React.createRef();
         this.addNotification = this.addNotification.bind(this)
         this.getGrupoInt = this.getGrupoInt.bind(this)
+        this.onClick = this.onClick.bind(this);
+        this.onHide = this.onHide.bind(this);
     }
 
     componentDidMount(){
         this.getGrupoInt()
-    }
-
-    
+        request
+        .get('http://localhost:3000/alumno')
+        .end((err, response)=>{
+            const data = JSON.parse(response.text);
+            var alumno = []
+            for(var key in data){
+                alumno.push({'value':data[key].MATRICULA,'label':data[key].NOMBRE_COMPLETO})
+            }
+            this.setState({
+                dataAlumno: alumno
+            });
+        });
+    } 
     showForm(){
         this.setState ({
             showForm : !this.state.showForm,
@@ -34,7 +52,19 @@ class Inscripcion extends Component{
         })
     }
 
-    addNotification(title,message,level,e){
+    onClick(GRUPO_ID, ALUMNOS_INSCRITOS) {
+        this.setState({
+            visible: true,
+            grupo_id: GRUPO_ID,
+            nroAlumnos: ALUMNOS_INSCRITOS
+        });
+    }
+
+    onHide(event) {
+        this.setState({visible: false});
+    }
+
+    addNotification(title,message,level){
         const notification = this.notificationSystem.current;
         notification.addNotification({
             title:title,
@@ -42,7 +72,6 @@ class Inscripcion extends Component{
             level: level,
             position:'br'
         });
-        e.preventDefault()
     };
 
     getGrupoInt(){
@@ -58,7 +87,43 @@ class Inscripcion extends Component{
         });
     }
 
+    addAlumno (matricula, nroAlumnos){
+        console.log(nroAlumnos <= 15);
+        if(nroAlumnos < 15){
+            request
+            .post('http://localhost:3000/alumnogrupoint')
+            .send({
+                matricula: matricula,
+                grupo_id: this.state.grupo_id
+            })
+            .set('Accept', /application\/json/)
+            .end((err, response)=>{
+                const res = (JSON.parse(response.text)['data'].success);
+                const msg = (JSON.parse(response.text)['data'].msg);
+                if(res){
+                    this.addNotification("Alumno",msg,"success")
+                    this.getGrupoInt()
+                    this.setState({
+                        nroAlumnos: this.state.nroAlumnos + 1
+                    })
+                }else{
+                    this.addNotification("Alumno",msg,"error")
+                }
+            });
+        }else{
+            this.addNotification("Alumno","Se alcanzo el limite de alumnos inscritos: "+ this.state.nroAlumnos,"error")
+        }
+    }
+
     render(){
+        const footer = (
+            <div>
+                <Button label="Agregar" icon="pi pi-check" onClick={e=>{
+                                    this.addAlumno(this.state.matricula,this.state.nroAlumnos)
+                                }} />
+                <Button label="Cancelar" icon="pi pi-times" onClick={this.onHide} className="p-button-secondary" />
+            </div>
+        );
         const columns = [
             {
               Header:"Docente",
@@ -81,26 +146,22 @@ class Inscripcion extends Component{
                 filterable: false
               },
               {
-                Header:"Cupo",
-                accessor: "ESTADO",
+                Header:"A. Inscritos",
+                accessor:"ALUMNOS_INSCRITOS",
                 filterable: false,
                 width: 100,
                 maxWidth: 100,
                 minWidth: 100
               },
             {
-              Header:"Acciones",
+              Header:"Nuevo",
               Cell: props =>{
+                var v_disabled = ''
+                if(props.original.ALUMNOS_INSCRITOS >= 15){
+                    v_disabled='disabled'
+                }
                 return(
-                  <button className="btn btn-light" 
-                    onClick={e=>
-                        this.setState ({
-                            showForm : !this.state.showForm,
-                            showTable : !this.state.showTable,
-                            grupo_id: props.original.GRUPO_ID
-                        })
-                    }
-                  >Agregar</button>
+                    <Button label="Añadir" icon="pi pi-external-link" onClick={(e)=>this.onClick(props.original.GRUPO_ID,props.original.ALUMNOS_INSCRITOS)} disabled={v_disabled}/>
                 )
               },
               filterable: false,
@@ -112,7 +173,6 @@ class Inscripcion extends Component{
         ];
         return(
             <div className="contenedor-tabla">
-            <h2 className="text-center">Inscripciones</h2>
             {
                 this.state.showForm?
                 <ReactTable 
@@ -137,7 +197,33 @@ class Inscripcion extends Component{
                 </div>
                 :null
             }
-                <NotificationSystem ref={this.notificationSystem} />
+
+            <Dialog header="Reinscripcion" visible={this.state.visible} style={{width: '50vw'}} footer={footer} onHide={this.onHide} maximizable>
+                <div className="row">
+                    <div className="col-md-12">
+                        <Select className="form-control"
+                            onChange={e => 
+                                this.setState({
+                                matricula: e.value
+                            })}
+                            name = "licencitura"
+                            options = {this.state.dataAlumno}
+                            className="basic-single"
+                            classNamePrefix="select"
+                        />
+                    </div>
+                    <div className="col-md-12">
+                        <a href="#" onClick={e=>{
+                             this.setState ({
+                                 showForm : !this.state.showForm,
+                                 showTable : !this.state.showTable,
+                                 visible: false
+                        })}}>¿El alumno no esta inscrito?</a>
+                    </div>
+                </div>
+            </Dialog>
+
+            <NotificationSystem ref={this.notificationSystem} />
             </div>
         );
     }

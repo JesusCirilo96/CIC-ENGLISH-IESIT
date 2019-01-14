@@ -7,6 +7,8 @@ import './formUtil/util.css';
 import './css/cardTeacher.css'
 import './formUtil/main.css';
 import './css/404.css';
+
+import 'bulma/css/bulma.css'
 import Favicon from 'react-favicon';
 
 import 'primereact/resources/themes/nova-light/theme.css';

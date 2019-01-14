@@ -42,6 +42,10 @@ class Home extends Component{
                 <button onClick={this.addNotification}>Add notification</button>
 
                 <Button label="Click" icon="pi pi-check" iconPos="right" />
+                Bulma 
+
+                
+
                 <NotificationSystem ref={this.notificationSystem} />
             </div>
         );

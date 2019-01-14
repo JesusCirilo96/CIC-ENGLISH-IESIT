@@ -1,5 +1,6 @@
 import React, { Component} from "react";
-
+import request from 'superagent';
+import store from '../../../store';
 import TableInternos from '../tables/internos';
 
 let datos
@@ -9,10 +10,22 @@ class Internos extends Component{
         super();
         this.state={
             showForm: true,
-            showTable: false
+            showTable: false,
+            grupoInterno: []
         };
 
         this.showForm = this.showForm.bind(this)
+    }
+
+    componentDidMount(){
+        request
+            .post('http://localhost:3000/getgroupint')
+            .send({"clave":store.getState().teacher[0].id})            
+            .set('Accept', /application\/json/)
+            .end((err, response)=>{
+                const res = (JSON.parse(response.text))
+                this.setState({grupoInterno:res})
+            });
     }
 
     showForm(){
@@ -28,11 +41,11 @@ class Internos extends Component{
             {
                 this.state.showForm?
                     <div className="col-md-12 contenedor-grupos">
-                        <strong><p>Grupos: {this.props.data.length}</p></strong>
+                        <strong><p>Grupos: {this.state.grupoInterno.length}</p></strong>
                         <div className="tabla">
                             <div className="row">
                                 {
-                                    this.props.data.map((data,i) =>
+                                    this.state.grupoInterno.map((data,i) =>
                                     <div key={i} className="col-md-3" onClick={e=>{
                                         datos = data
                                         this.showForm();

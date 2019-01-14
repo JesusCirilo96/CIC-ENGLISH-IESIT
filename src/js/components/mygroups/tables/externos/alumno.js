@@ -1,6 +1,7 @@
 import React, { Component} from "react";
 import request from 'superagent';
 import Select from 'react-select';
+import {InputText} from 'primereact/inputtext';
 class Alumno extends Component{
 
     constructor(){
@@ -36,12 +37,12 @@ class Alumno extends Component{
             });
         });
         request
-        .get('http://localhost:3000/alumno')
+        .get('http://localhost:3000/alumnoext')
         .end((err, response)=>{
             const data = JSON.parse(response.text);
             var alumno = []
             for(var key in data){
-                alumno.push({'value':data[key].MATRICULA,'label':data[key].NOMBRE_COMPLETO})
+                alumno.push({'value':data[key].ID,'label':data[key].NOMBRE_COMPLETO})
             }
             this.setState({
                 dataAlumno: alumno
@@ -164,77 +165,42 @@ class Alumno extends Component{
                             </div>
                         </div>
                         <hr/>
-                        <form className="">
+                        <form className="form-grupo-externo">
                             <div className="row form-group">
-                                <div className="col-md-4">
-                                    <p className="bold">*MATRICULA:</p>
-                                    <input type="text" className="form-control" maxLength="8" defaultValue={this.state.matricula} name="matricula" placeholder="Example: 1403B005" onChange={e=> this.change(e)} /> 
+                                <div className="col-md-12">
+                                    <span className="p-float-label">
+                                        <InputText id="float-input-name" type="text" size="50" name="nombre" value={this.state.nombre} onChange={(e) => this.change(e)} />
+                                        <label htmlFor="float-input-name">Nombre</label>
+                                    </span>
                                 </div>
                             </div>
                             <div className="row form-group">
-                                <div className="col-md-6">
-                                    <p className="bold">*NAME:</p>
-                                    <input type="text" className="form-control" defaultValue={this.state.nombre} name="nombre" onChange={e=> this.change(e)} /> 
-                                </div>
-                                <div className="col-md-6 input-group">
-                                    <p className="bold">*LAST NAME:</p>
-                                    <div className="input-group">
-                                        <input type="text" className="form-control" defaultValue={this.state.app} name="app" onChange={e=> this.change(e)} />
-                                        <input type="text" className="form-control" defaultValue={this.state.apm} name="apm" onChange={e=> this.change(e)} />
-                                    </div>
+                                <div className="col-md-12">
+                                    <span className="p-float-label">
+                                        <InputText id="float-input-app" type="text" size="50" name="app" value={this.state.app} onChange={(e) => this.change(e)} />
+                                        <label htmlFor="float-input-app">Primer apellido</label>
+                                    </span>
                                 </div>
                             </div>
                             <div className="row form-group">
-                                <div className="col-md-6">
-                                    <p className="bold">DEGREE:</p>
-                                    <Select className="form-control"
-                                        onChange={e => 
-                                            this.setState({
-                                                licenciatura: e.value
-                                            })
-                                        }
-                                        name = "licencitura"
-                                        options = {this.state.dataLicenciatura}
-                                        className="basic-single"
-                                        classNamePrefix="select"
-                                    />
-                                </div>
-                                <div className="col-md-3">
-                                    <p className="bold">SEMESTER:</p>
-                                    <Select className="form-control"
-                                        onChange={e => 
-                                            this.setState({
-                                                semestre: e.value
-                                            })
-                                        }
-                                        name = "modalidad"
-                                        options = {semestre}
-                                        className="basic-multi-select"
-                                        classNamePrefix="select"
-                                     />
-                                </div>
-                                <div className="col-md-3">
-                                <p className="bold">GROUP:</p>
-                                    <Select className="form-control"
-                                        onChange={e => 
-                                            this.setState({
-                                                grupo: e.value
-                                            })
-                                        }
-                                        name = "grupo"
-                                        options = {grupo}
-                                        className="basic-multi-select"
-                                        classNamePrefix="select"
-                                    />
+                                <div className="col-md-12">
+                                    <span className="p-float-label">
+                                        <InputText id="float-input-apm" type="text" size="50" name="apm" value={this.state.apm} onChange={(e) => this.change(e)} />
+                                        <label htmlFor="float-input-apm">Segundo apellido</label>
+                                    </span>
                                 </div>
                             </div>
                             <div className="row form-group">
-                                <div className="col-md-6">
-                                    <p className="bold">EMAIL ADDRESS:</p>
-                                    <input type="email" className="form-control" defaultValue={this.state.email} placeholder="example@example.com" name="email" onChange={e=> this.change(e)} /> 
+                                <div className="col-md-12">
+                                    <span className="p-float-label">
+                                        <InputText id="float-input-email" type="email" size="50" name="email" value={this.state.email} onChange={(e) => this.change(e)} />
+                                        <label htmlFor="float-input-email">E-mail</label>
+                                    </span>
                                 </div>
-                                <div className="col-md-3">
-                                <p className="bold">ESTATUS:</p>
+                            </div>
+                            <div className="row form-group">
+                                <div className="col-md-12">
+                                <p className="bold">Estado:</p>
                                     <Select className="form-control"
                                         name = "estado"
                                         options = {estado}
@@ -247,8 +213,10 @@ class Alumno extends Component{
                                         classNamePrefix="select"
                                     />
                                 </div>
-                                <div className="col-md-3">
-                                    <p className="bold">GROUP:</p>
+                            </div>
+                            <div className="row form-group">
+                                <div className="col-md-12">
+                                    <p className="bold">Grupo:</p>
                                     <input type="text" className="form-control" defaultValue={this.props.grupo_id} name="grupo_id" onChange={e=> this.change(e)} disabled /> 
                                 </div>
                             </div>

@@ -11,6 +11,7 @@ class GrupoForm extends Component {
         dataNivel: [],
         dataPeriodo:[],
         dataCiclo:[],
+        horario:[],
         accion: '',
         id:this.props.data.GRUPO_ID,
         nombre: '',
@@ -68,18 +69,34 @@ class GrupoForm extends Component {
             });
         });
         request
-        .get('http://localhost:3000/periodoescolar')
+        .get('http://localhost:3000/horario')
         .end((err, response)=>{
             const data = JSON.parse(response.text);
-            var periodo = []
+            var horario = []
             for(var key in data){
-                periodo.push({'value':data[key].PERIODO_ID,'label':data[key].NOMBRE})
+                horario.push({'value':data[key].HORARIO_ID,'label':data[key].HORA_INICIO + " A " + data[key].HORA_FIN})
             }
             this.setState({
-            dataPeriodo: periodo
+            dataHorario: horario
             });
         });
+        this.periodoEscolar();
     }
+  }
+
+  periodoEscolar(){
+    request
+    .get('http://localhost:3000/periodoescolar')
+    .end((err, response)=>{
+        const data = JSON.parse(response.text);
+        var periodo = []
+        for(var key in data){
+            periodo.push({'value':data[key].PERIODO_ID,'label':data[key].NOMBRE})
+        }
+        this.setState({
+        dataPeriodo: periodo
+        });
+    });
   }
 
   change(e){
@@ -104,19 +121,6 @@ class GrupoForm extends Component {
         var grupo = this.state.grupo, modalidad =this.state.modalidad, ciclo = this.state.ciclo_escolar, periodo = this.state.periodo_escolar
         var turno = this.state.turno, nivel = this.state.nivel
         var dias = this.state.dias, docente = this.state.docente
-
-      /*  if(nombre === '') this.setState({errorNombre: true})
-        if(salon === '') this.setState({errorSalon: true})
-        if(grupo === '') this.setState({errorGrupo: true})
-        if(modalidad === '') this.setState({errorModalidad: true})
-        if(ciclo === '') this.setState({errorCiclo: true})
-        if(periodo === '') this.setState({errorPeriodo: true})
-        if(turno === '') this.setState({errorTurno: true})
-        if(nivel === '') this.setState({errorNivel: true})
-        if(dias === '') this.setState({errorDias: true})
-        if(docente === '') this.setState({errorDocente: true})
-        if(estado === '') this.setState({errorEstado: true})
-        if(horario === '') this.setState({errorEstado: true})*/
 
         if(nombre !== '' && 
             salon !== '' &&
@@ -242,7 +246,7 @@ class GrupoForm extends Component {
                         <div className="wrap-input100">
                             <input className="input100" type="text" required
                             name = "nombre"
-                            placeholder="Example: Beginner A"
+                            placeholder="Nombre del grupo"
                             defaultValue={this.props.data.NOMBRE_GRUPO}
                             onChange={e=> this.change(e)}
                             />
@@ -254,7 +258,7 @@ class GrupoForm extends Component {
                         <div className="wrap-input100">
                             <input className="input100" type="text" required
                             name = "salon"
-                            placeholder="Example: A1"
+                            placeholder="Salon de clases"
                             defaultValue={this.props.data.SALON}
                             onChange={e=> this.change(e)} 
                             />
@@ -467,16 +471,29 @@ class GrupoForm extends Component {
                 <div className="row">
                     <div className="col-md-4">
                     Horario:
-                        {
+                    {
+                            this.props.edit?
                             <div className="wrap-input100">
                               <input className="input100"
                                 type="text"
-                                name="horario"
-                                defaultValue={this.props.data.HORARIO}
-                                placeholder="Example: 09:10 Am to 10:30 Am"
+                                disabled
+                                value={this.props.data.HORARIO}
                                 onChange={e=> this.change(e)}
                               />
                               <span className="focus-input100"></span>
+                            </div>:
+                            <div className="selectStyle">
+                            <Select className="form-control"
+                                    onChange={e => 
+                                        this.setState({
+                                            horario: e.value
+                                        })
+                                    }
+                                    name = "horario"
+                                    options = {this.state.dataHorario}
+                                    className="basic-multi-select"
+                                    classNamePrefix="select"
+                                />
                             </div>
                         }
                     </div>

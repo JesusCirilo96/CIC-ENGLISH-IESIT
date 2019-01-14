@@ -50,7 +50,7 @@ class Login extends Component {
                 <div className="row">
                   <input className="form-control" type="text" 
                     name="username"
-                    placeholder="Username or E-mail" 
+                    placeholder="Username" 
                     value={this.state.username}
                     onChange={e=> this.change(e)} 
                   />

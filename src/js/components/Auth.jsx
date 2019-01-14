@@ -18,14 +18,18 @@ import LoginForm from '../components/login/Login';
 
 //Header
 import Home from './Home';
-import Mygroups from './mygroups';
 import Teachers from './teachers';
 import Students from './students';
 import Settings from './settings';
 import Inscripcion from './inscripciones';
+import GrupoInterno from './catalogo/view/GrupoInt';
+import Docente from './catalogo/view/Docente';
+import Nivel from './catalogo/view/Nivel';
+import Licenciatura from './catalogo/view/Licenciatura';
 
-//catalogos
-import Catalogo from './catalogo/Catalogo';
+import MiGrupoInterno from './mygroups/groups/internos';
+import MiGrupoExterno from './mygroups/groups/externos';
+
 
 var level;
 
@@ -61,38 +65,11 @@ const fakeAuth = {
 class Login extends Component {
     constructor(...props){
         super(...props)
-
         this.state={
-            redirectRoute: false,
-            token: ''
+            redirectRoute: false
         }
 
         this.login = this.login.bind(this)
-    }
-
-    verifyToken(){
-        request
-            .post('http://localhost:3000/api/posts')
-            .set('Accept', /application\/json/)
-            .set('Authorization', 'Bearer ' + this.state.token)
-            .end((err, response)=>{
-            if(response.body === null){
-                console.log("Its null")
-            }else{
-                console.log(response.body);
-                if(response.body.access === true){
-                    const nivel = response.body.authData.user.accessLevel;
-                    switch (nivel){
-                        case "1": level = 1; break;
-                        case "2": level = 2; break;
-                        case "3": level = 3; break;
-                    }
-                    fakeAuth.authenticate(()=>this.setState({redirectRoute:true}))
-                    this.dataTeacher(response.body.authData.user)
-                    //console.log(response.body.authData.user)
-                }
-            }
-        });
     }
 
    login(data){
@@ -101,20 +78,31 @@ class Login extends Component {
           .send(data)
           .set('Accept', /application\/json/)
           .end((err, response)=>{
-            const token = response.body.token;
-//            console.log(response.body); imprime el token
-            this.setState({
-                token: token
-            })
-            if(token){
-                this.verifyToken();
+            if(response.body === null){
+                console.log("Its null")
+            }else{
+                console.log(response);
+                if(response.body.access === true){
+                    const nivel = response.body.accessLevel;
+                    switch (nivel){
+                        case "1": level = 1; break;
+                        case "2": level = 2; break;
+                        case "3": level = 3; break;
+                    }
+                    fakeAuth.authenticate(()=>this.setState({redirectRoute:true}))
+                    this.dataTeacher({id:response.body.id, isAuthenticated:fakeAuth.isAuthenticated})
+                    //console.log(response.body.authData.user)
+                    //console.log("Dentro");
+                }
             }
           });
     }
 
     render(){
         const {from} = this.props.location.state || {from:{pathname: '/home'}}
+        
         const {redirectRoute} = this.state
+                
         if( redirectRoute ){
             return (
                 <Redirect to={from} />
@@ -140,29 +128,29 @@ class Login extends Component {
 
 }
 
-const Routes = () =>(
-    <Switch>
-        <PrivateRoute exact path="/home" component={Home}/>
-        <PrivateRoute exact path="/catalogues" component={Catalogo}/>     
-        <PrivateRoute exact path="/mygroups" component={Mygroups}/>
-        <PrivateRoute exact path="/teachers" component={Teachers}/>
-        <PrivateRoute exact path="/students" component={Students}/>
-        <PrivateRoute exact path="/settings" component={Settings}/>
-        <PrivateRoute exact path="/inscripcion" component={Inscripcion}/>
-
-        <Route component={Page404}/>
-    </Switch>
-)
-
 const Authsite = () =>(
     <Router>
         <div>
             <AuthButton />
             <Switch>
                 <Route exact path="/" component={Login}/>
-                <Routes />                
+                <PrivateRoute exact path="/home" component={Home}/>
+                <PrivateRoute exact path="/teachers" component={Teachers}/>
+                <PrivateRoute exact path="/students" component={Students}/>
+                <PrivateRoute exact path="/settings" component={Settings}/>
+                <PrivateRoute exact path="/inscripcion" component={Inscripcion}/>
+
+                <PrivateRoute exact path="/misgruposinternos" component={MiGrupoInterno}/>
+                <PrivateRoute exact path="/misgruposexternos" component={MiGrupoExterno}/>
+
+                <PrivateRoute exact path="/gruposinternos" component={GrupoInterno}/>
+                <PrivateRoute exact path="/docentes" component={Docente}/>
+                <PrivateRoute exact path="/licenciatura" component={Licenciatura}/>
+                <PrivateRoute exact path="/nivel" component={Nivel}/>                
+
+                <Route component={Page404}/>
             </Switch>
-        </div>
+        </div>  
     </Router>
 )
 
