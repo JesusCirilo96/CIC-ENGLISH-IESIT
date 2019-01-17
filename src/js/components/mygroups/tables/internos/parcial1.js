@@ -1,10 +1,7 @@
 import React, { Component} from "react";
 import ReactTable from "react-table";
 import request from 'superagent';
-
-
 import {Button} from 'primereact/button';
-
 
 class Parcial1 extends Component {  
 

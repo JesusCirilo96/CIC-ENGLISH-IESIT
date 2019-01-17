@@ -1,5 +1,6 @@
 import React, { Component} from "react";
 import {Link} from 'react-router-dom';
+import store from '../../store'
 
 class Header extends Component{
     constructor (){
@@ -11,7 +12,6 @@ class Header extends Component{
     
 
     componentDidMount(){
-        this.level();
         this.navbar();
     }
 
@@ -40,53 +40,6 @@ class Header extends Component{
       
     };
 
-    
-
-    level(){
-        if(this.props.level === 1){
-            this.setState({
-                header: [
-                 {
-                     route: "/home",
-                     tag: "Inicio",
-                 },
-                 {
-                    route: "/teachers",
-                    tag:"Docentes"
-                },
-                {
-                    route: "/students",
-                    tag:"Alumnos"
-                }
-                ]
-            })
-        }
-        if(this.props.level === 2){
-           this.setState({
-               header: [
-                {
-                    route: "/home",
-                    tag: "Inicio"
-                }
-               ]
-           })
-        }
-
-        if(this.props.level === 3){
-            this.setState({
-                header: [
-                 {
-                     route: "/home",
-                     tag: "Inicio"
-                 },
-                 {
-                     route: "/qualification",
-                     tag:"Mis Calificaciones"
-                 }
-                ]
-            })
-         }
-    }
     render(){
         return(
             <nav className="navbar navigation" role="navigation" aria-label="main navigation">
@@ -103,11 +56,7 @@ class Header extends Component{
 
                 <div className="navbar-menu" id="navMenu">
                     <div className="navbar-start">
-                        {
-                            this.state.header.map((data, i) =>  
-                                <Link key={i} className="navbar-item" to={data.route}>{data.tag}</Link>
-                            )
-                        }
+                        <Link className="navbar-item" to="home">Inicio</Link>
                         {
                             this.props.level === 1 || this.props.level === 2 ?
                             <div className="navbar-item has-dropdown is-hoverable">
@@ -153,17 +102,16 @@ class Header extends Component{
                     <div className="navbar-end">
                         <div className="navbar-item has-dropdown is-hoverable">
                             <a className="navbar-link">
-                                Jesus                                
+                            {store.getState().teacher[0].username}
                             </a>
                             <div className="navbar-dropdown">
                                 <Link className="navbar-item" to="/settings">Mi perfil</Link>
-                            </div>
-                        </div>
-                        <div>
-                            <a className="navbar-item"
+                                <hr className="navbar-divider"/>
+                                <a className="navbar-item"
                                     onClick={()=> this.props.fakeAuth.sigout(()=> this.props.history.push('/'))}>
                                     Cerrar sesion
-                            </a>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div> 

@@ -255,22 +255,6 @@ html {
     padding: 3em;
 }
 
-.img-profile-settings{
-    width: 100%;
-    margin-bottom: 1em;
-}
-
-.img-profile-settings figure{
-    width: 250px;
-    height:250px;
-    margin: auto;
-}
-.img-profile-settings figure img{
-    height: 100%;
-    width: 100%;
-    object-fit: cover;
-}
-
 .form-grupo-externo{
     width: 40%;
     margin: auto;

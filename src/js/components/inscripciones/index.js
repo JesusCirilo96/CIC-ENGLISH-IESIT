@@ -88,7 +88,6 @@ class Inscripcion extends Component{
     }
 
     addAlumno (matricula, nroAlumnos){
-        console.log(nroAlumnos <= 15);
         if(nroAlumnos < 15){
             request
             .post('http://localhost:3000/alumnogrupoint')
@@ -184,6 +183,7 @@ class Inscripcion extends Component{
                     ofText = 'de'
                     rowsText = 'Registros'
                     defaultPageSize = {20}
+                    className="-highlight"
                     filterable
                     columns = {columns} data = {this.state.dataGrupos}>
                 </ReactTable>
@@ -193,7 +193,7 @@ class Inscripcion extends Component{
                 this.state.showTable?
                 <div>
                     <a href="#" onClick={this.showForm} >Regresar</a>
-                    <Alumno grupo_id = {this.state.grupo_id} get_alumno={this.getGrupoInt} notificacion={this.addNotification} />
+                    <Alumno grupo_id = {this.state.grupo_id} nroAlumnos={this.state.nroAlumnos} grupo_int={this.getGrupoInt} notificacion={this.addNotification} />
                 </div>
                 :null
             }

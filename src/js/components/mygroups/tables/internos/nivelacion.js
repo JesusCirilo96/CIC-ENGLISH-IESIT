@@ -1,6 +1,7 @@
 import React, { Component} from "react";
 import ReactTable from "react-table";
 import request from 'superagent';
+import {Button} from 'primereact/button';
 
 class Nivelacion extends Component {  
 
@@ -30,10 +31,13 @@ class Nivelacion extends Component {
   }
 
   saveNivelacionInterno(calificacion,matricula,grupo,nombre,parcial){
+    var regex = /(\d+)/g;
+    calificacion = calificacion.match(regex);
+
     request
       .post('http://localhost:3000/nivelacionint')
       .send({
-        calificacion: calificacion,
+        calificacion: parseInt(calificacion),
         param:"N",
         matricula: matricula,
         grupo: grupo
@@ -154,22 +158,24 @@ class Nivelacion extends Component {
                 Header:"Acciones",
                 Cell: props =>{
                 return(
-                  <button className="btn btn-light" 
+                  <Button
+                    className="p-button-secondary"
+                    label="Guardar"
+                    icon="pi pi-check"
+                    iconPos="right"
                     onClick={()=>{
                     this.saveNivelacionInterno(
-                      props.original.CAL_NIVELACION,
+                      String(props.original.CAL_NIVELACION),
                       props.original.ALUMNO_MATRICULA,
                       props.original.GRUPO_ID,
                       props.original.NOMBRE_COMPLETO,
                       props.original.NIVELACION_PAR
                     );
                     }}
-                  >Guardar</button>
+                  />
                 )
               },
-              width: 100,
-              maxWidth: 100,
-              minWidth: 100
+              width: 120
               }          
         ];
 
@@ -185,6 +191,7 @@ class Nivelacion extends Component {
                 rowsText = 'Registros'
                 defaultPageSize = {15}
                 className="-highlight"
+                showPaginationBottom = {false}
                 columns = {columns} data = {this.props.dataTable}>
             </ReactTable>      
           </div>

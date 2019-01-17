@@ -1,6 +1,8 @@
 import React, { Component} from "react";
 import request from 'superagent';
 import store from '../../store';
+import {InputMask} from 'primereact/inputmask'
+import NotificationSystem from 'react-notification-system';
 
 class Settings extends Component{
 
@@ -15,39 +17,14 @@ class Settings extends Component{
             level:'',
             date:'',
             status:'',
-            picture:'',
             mobile_number:'',
-            file: '',
-            imagePreviewUrl: '',
-            msgD:false
+            msgD:false,
+            passwordA: '',
+            passwordN:'',
+            passwordC:''
         }
-
-        this._handleImageChange = this._handleImageChange.bind(this);
-        this._handleSubmit = this._handleSubmit.bind(this);
+        this.notificationSystem = React.createRef();
     }
-
-    _handleSubmit(e) {
-        e.preventDefault();
-        // TODO: do something with -> this.state.file
-
-      }
-    
-      _handleImageChange(e) {
-        e.preventDefault();
-    
-        let reader = new FileReader();
-        let file = e.target.files[0];
-    
-        reader.onloadend = () => {
-          this.setState({
-            file: file,
-            imagePreviewUrl: reader.result
-          });
-        }
-    
-        reader.readAsDataURL(file)
-      }
-
     change(e){
         this.setState({
           [e.target.name]: e.target.value
@@ -113,14 +90,40 @@ class Settings extends Component{
           e.preventDefault();
       }
 
+      savePassword(e){
+          if(this.state.passwordN === this.state.passwordC){
+            request
+            .post('http://localhost:3000/docente')
+            .send({
+                    modificacion:'P',
+                    docente_id:this.state.id,
+                    passwordA:this.state.passwordA,
+                    passwordN:this.state.passwordN
+                })
+            .set('Accept', /application\/json/)
+            .end((err, response)=>{
+                const res = (JSON.parse(response.text).success);
+                const msg = (JSON.parse(response.text).msg);
+                if(res){
+                   this.addNotification("Contraseña",msg,"success")        
+                }else{
+                    this.addNotification("Contraseña",msg,"error")        
+                }
+            });
+          }else{
+            this.addNotification("Contraseña","Las contraseñas no coinciden","warning")
+          }
+        
+          e.preventDefault();
+      }
+
       getDataState(djson){
         var nombre = '', app='', apm='', email='', picture='',level='',date='',status='',mobile_number = '';
         djson.map((data,key)=>{
             nombre= data.NOMBRE,
             app = data.APP,
             apm = data.APM,
-            email = data.EMAIL,
-            picture = data.PICTURE,
+            email = data.EMAIL,            
             level = data.NIVEL_ACCESO,
             date = data.FECHA_REGISTRO,
             status = data.ESTADO,
@@ -135,18 +138,22 @@ class Settings extends Component{
             date : date,
             picture: picture,
             status : status,
-            mobile_number : mobile_number,
-            imagePreviewUrl:picture
+            mobile_number : mobile_number            
         })
       }
 
-    render(){
-        let {imagePreviewUrl} = this.state;
-        let $imagePreview = null;
-        if (imagePreviewUrl) {
-          $imagePreview = (<img className="img-thumbnail" src={imagePreviewUrl}/>);
-        }
+      
+    addNotification(title,message,level){
+        const notification = this.notificationSystem.current;
+        notification.addNotification({
+            title:title,
+            message: message,
+            level: level,
+            position:'br'
+        });
+    };
 
+    render(){
         return(
             <div className="contenedor-tabla">
                 <div className="col-md-12">
@@ -158,30 +165,6 @@ class Settings extends Component{
                     <hr/>
                     <div className="row">
                         <div className="col-md-3 form-settings-aside">
-                                <div className="row">
-                                    <div className="img-profile-settings col-md-12">
-                                        <figure>
-                                            {$imagePreview}
-                                        </figure>                            
-                                    </div>
-                                </div>
-                            <form>
-                                <div className="row">
-                                    <div className="col-md-12 input-group">
-                                        <div className="custom-file">
-                                            <input type="file" className="custom-file-input" name="picture" onChange={this._handleImageChange} id="inputGroupFile04"/>
-                                            <label className="custom-file-label">Choose file</label>
-                                        </div>
-                                        <div className="input-group-append">
-                                            <button className="btn btn-outline-secondary" type="submit" onClick={this._handleSubmit}>Upload</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                            <hr/>
-                            <div className="row">
-                                <div className="col-md-12"><h5 className="text-center">NOTES</h5></div>
-                            </div>
                             <div className="row">
                                 <div className="col-md-12"><p><strong>Access Level:</strong> <br/>{this.getNivel(this.state.level)}</p></div>
                             </div>
@@ -210,12 +193,11 @@ class Settings extends Component{
                                 <div className="row form-group">
                                     <div className="col-md-6">
                                         <p className="bold">EMAIL ADDRESS:</p>
-                                        <input type="email" className="form-control" defaultValue={this.state.email} placeholder="example@example.com" name="email" onChange={e=> this.change(e)} /> 
-                                        <small id="emailHelp" className="form-text text-muted">You can use the email to login.</small>
+                                        <input type="email" className="form-control" defaultValue={this.state.email} placeholder="example@example.com" name="email" onChange={e=> this.change(e)} />
                                     </div>
                                     <div className="col-md-6">
                                         <p className="number bold">MOBILE NUMBER:</p>
-                                        <input type="text" className="form-control" defaultValue={this.state.mobile_number} placeholder="Enter Your mobile Number" name="mobile_number" onChange={e=> this.change(e)}/> 
+                                        <InputMask size="50" mask="(999) 999-9999" value={this.state.mobile_number} placeholder="Enter your mobile number" name="mobile_number" onChange={(e) => this.change(e)}></InputMask>
                                         <small id="emailHelp" className="form-text text-muted">This information can be used to contact you.</small>
                                     </div>
                                 </div>
@@ -234,26 +216,39 @@ class Settings extends Component{
                             </form>
                             <hr/>
                             <h4>Change your password</h4>
-                            <form>
-                                <div className="row justify-content-start form-group">
-                                    <div className="col-md-5">
-                                        <p className="bold">CURRENT PASSWORD:</p>
-                                        <input type="password" className="form-control" placeholder="Current Password" name="last-password"/> 
+                            <form className="col-md-12 form-group">
+                                
+                                    <div className="row">
+                                        <div className="col-md-5">
+                                            <p className="bold">Contraseña Actual:</p>
+                                            <input type="password" className="form-control"  placeholder="Contraseña Actual" name="passwordA" onChange={e=>this.change(e)}/> 
+                                        </div>
                                     </div>
-                                    <div className="col-md-5">
-                                        <p className="bold">NEW PASSWORD:</p>
-                                        <input type="password" className="form-control" placeholder="New Password" name="new-password"/> 
+                                    <div className="row">
+                                        <div className="col-md-5">
+                                            <p className="bold">Nueva contraseña:</p>
+                                            <input type="password" className="form-control" placeholder="Nueva Contraseña" name="passwordN" onChange={e => this.change(e)}/> 
+                                        </div>
+                                        <div className="col-md-5">
+                                            <p className="bold">Confirmar contraseña:</p>
+                                            <input type="password" className="form-control" placeholder="Confirmar Contraseña" name="passwordC" onChange={e => this.change(e)}/> 
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="row">
-                                    <div className="col-md-2">
-                                            <button className="btn btn-secondary">Change</button>
+                                    <br/>   
+                                    <div className="row">
+                                        <div className="col-md-2">
+                                            <button className="btn btn-secondary"
+                                                onClick={e=>
+                                                    this.savePassword(e)
+                                                }
+                                            >Change</button>
+                                        </div>
                                     </div>
-                                </div>
                             </form>
                         </div>
                     </div>
                 </div>
+                <NotificationSystem ref={this.notificationSystem} />
             </div>
         );
     }

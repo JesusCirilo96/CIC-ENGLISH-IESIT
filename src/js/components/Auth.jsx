@@ -90,7 +90,7 @@ class Login extends Component {
                         case "3": level = 3; break;
                     }
                     fakeAuth.authenticate(()=>this.setState({redirectRoute:true}))
-                    this.dataTeacher({id:response.body.id, isAuthenticated:fakeAuth.isAuthenticated})
+                    this.dataTeacher({id:response.body.id,username:response.body.username ,isAuthenticated:fakeAuth.isAuthenticated})
                     //console.log(response.body.authData.user)
                     //console.log("Dentro");
                 }

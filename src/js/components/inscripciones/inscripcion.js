@@ -4,7 +4,7 @@ import Select from 'react-select';
 
 class Inscripcion extends Component{
 
-    constructor(){
+    constructor(props){
         super();
         this.state={
             dataLicenciatura:[],
@@ -14,13 +14,13 @@ class Inscripcion extends Component{
             nombre:'',
             app:'',
             apm:'',
-            estado:'',
             licenciatura:'',
             semestre:'',
             grupo:'',
-            email:''
+            email:'',
+            nroAlumnos: props.nroAlumnos,
+            disabled: ""
         }
-
     }
 
     componentWillMount(){
@@ -65,7 +65,6 @@ class Inscripcion extends Component{
               nombre: this.state.nombre,
               apellido_pat: this.state.app,
               apellido_mat: this.state.apm,
-              estado:this.state.estado,
               licenciatura: this.state.licenciatura,
               semestre: this.state.semestre,
               grupo: this.state.grupo,
@@ -79,7 +78,16 @@ class Inscripcion extends Component{
             if(res){
                 this.props.notificacion("Alumno",msg,"success")
                 this.addAlumno(this.state.matricula)
-                this.props.get_alumno()
+                this.setState({
+                    matricula:'',                    
+                    nombre:'',
+                    app:'',
+                    apm:'',
+                    licenciatura:'',
+                    semestre:'',
+                    grupo:'',
+                    email:''
+                })
             }else{
                 this.props.notificacion("Alumno",msg,"error")
             } 
@@ -88,23 +96,35 @@ class Inscripcion extends Component{
       }
 
       addAlumno (matricula){
-        request
-          .post('http://localhost:3000/alumnogrupoint')
-          .send({
-              matricula: matricula,
-              grupo_id: this.props.grupo_id
-          })
-          .set('Accept', /application\/json/)
-          .end((err, response)=>{
-            const res = (JSON.parse(response.text)['data'].success);
-            const msg = (JSON.parse(response.text)['data'].msg);
-            if(res){
-                this.props.notificacion("Alumno",msg,"success")
-                this.props.get_alumno()
-            }else{
-                this.props.notificacion("Alumno",msg,"error")
-            }
-          });
+        if(this.state.nroAlumnos < 15){
+            request
+            .post('http://localhost:3000/alumnogrupoint')
+            .send({
+                matricula: matricula,
+                grupo_id: this.props.grupo_id
+            })
+            .set('Accept', /application\/json/)
+            .end((err, response)=>{
+                const res = (JSON.parse(response.text)['data'].success);
+                const msg = (JSON.parse(response.text)['data'].msg);
+                if(res){
+                    this.props.notificacion("Alumno",msg,"success")
+                    this.setState({
+                        nroAlumnos: this.state.nroAlumnos + 1
+                    })
+                    this.props.grupo_int()
+                    //console.log(this.state.nroAlumnos)
+                }else{
+                    this.props.notificacion("Alumno",msg,"error")
+                }
+            });
+        }
+        if(this.state.nroAlumnos === 14){
+            this.props.notificacion("¡Alumno","Se alcanzo el limite de alumnos inscritos! ","info")
+            this.setState({
+                disabled:"disabled"
+            })
+        }
       }
 
     render(){
@@ -125,10 +145,6 @@ class Inscripcion extends Component{
             {value:'9', label:'Noveno'},
             {value:'10', label:'Decimo'}
         ]
-        const estado = [
-            {value: '0', label:'Activo'},
-            {value: '1', label:'Inactivo'}
-        ]
         return(
             <div className="">
             <div className="col-md-12">
@@ -137,32 +153,33 @@ class Inscripcion extends Component{
                         <form className="">
                             <div className="row form-group">
                                 <div className="col-md-4">
-                                    <p className="bold">*MATRICULA:</p>
-                                    <input type="text" className="form-control" maxLength="8" defaultValue={this.state.matricula} name="matricula" placeholder="Example: 1403B005" onChange={e=> this.change(e)} /> 
+                                    <p className="bold">*Matricula:</p>
+                                    <input type="text" className="form-control" maxLength="8" defaultValue={this.state.matricula} name="matricula" placeholder="Example: 1403B005" onChange={e=> this.change(e)} disabled={this.state.disabled} /> 
                                 </div>
                             </div>
                             <div className="row form-group">
                                 <div className="col-md-6">
-                                    <p className="bold">*NAME:</p>
-                                    <input type="text" className="form-control" defaultValue={this.state.nombre} name="nombre" onChange={e=> this.change(e)} /> 
+                                    <p className="bold">*Nombre:</p>
+                                    <input type="text" className="form-control" defaultValue={this.state.nombre} name="nombre" placeholder="Nombre" onChange={e=> this.change(e)} disabled={this.state.disabled}/> 
                                 </div>
                                 <div className="col-md-6 input-group">
-                                    <p className="bold">*LAST NAME:</p>
+                                    <p className="bold">*Apellidos:</p>
                                     <div className="input-group">
-                                        <input type="text" className="form-control" defaultValue={this.state.app} name="app" onChange={e=> this.change(e)} />
-                                        <input type="text" className="form-control" defaultValue={this.state.apm} name="apm" onChange={e=> this.change(e)} />
+                                        <input type="text" className="form-control" defaultValue={this.state.app} name="app" placeholder="Apellido paterno" onChange={e=> this.change(e)} disabled={this.state.disabled}/>
+                                        <input type="text" className="form-control" defaultValue={this.state.apm} name="apm" placeholder="Apellido materno" onChange={e=> this.change(e)} disabled={this.state.disabled}/>
                                     </div>
                                 </div>
                             </div>
                             <div className="row form-group">
                                 <div className="col-md-6">
-                                    <p className="bold">DEGREE:</p>
+                                    <p className="bold">Licenciatura:</p>
                                     <Select className="form-control"
                                         onChange={e => 
                                             this.setState({
                                                 licenciatura: e.value
                                             })
                                         }
+                                        isDisabled={this.state.disabled}
                                         name = "licencitura"
                                         options = {this.state.dataLicenciatura}
                                         className="basic-single"
@@ -170,13 +187,14 @@ class Inscripcion extends Component{
                                     />
                                 </div>
                                 <div className="col-md-3">
-                                    <p className="bold">SEMESTER:</p>
+                                    <p className="bold">Semestre:</p>
                                     <Select className="form-control"
                                         onChange={e => 
                                             this.setState({
                                                 semestre: e.value
                                             })
                                         }
+                                        isDisabled={this.state.disabled}
                                         name = "modalidad"
                                         options = {semestre}
                                         className="basic-multi-select"
@@ -184,13 +202,14 @@ class Inscripcion extends Component{
                                      />
                                 </div>
                                 <div className="col-md-3">
-                                <p className="bold">GROUP:</p>
+                                <p className="bold">Grupo:</p>
                                     <Select className="form-control"
                                         onChange={e => 
                                             this.setState({
                                                 grupo: e.value
                                             })
                                         }
+                                        isDisabled = {this.state.disabled}
                                         name = "grupo"
                                         options = {grupo}
                                         className="basic-multi-select"
@@ -200,31 +219,17 @@ class Inscripcion extends Component{
                             </div>
                             <div className="row form-group">
                                 <div className="col-md-6">
-                                    <p className="bold">EMAIL ADDRESS:</p>
-                                    <input type="email" className="form-control" defaultValue={this.state.email} placeholder="example@example.com" name="email" onChange={e=> this.change(e)} /> 
+                                    <p className="bold">Correo electronico:</p>
+                                    <input type="email" className="form-control" defaultValue={this.state.email} placeholder="example@example.com" name="email" onChange={e=> this.change(e)} disabled = {this.state.disabled} /> 
                                 </div>
                                 <div className="col-md-3">
-                                <p className="bold">ESTATUS:</p>
-                                    <Select className="form-control"
-                                        name = "estado"
-                                        options = {estado}
-                                        onChange={e => 
-                                            this.setState({
-                                                estado: String(e.value)
-                                            })
-                                        }
-                                        className="basic-multi-select"
-                                        classNamePrefix="select"
-                                    />
-                                </div>
-                                <div className="col-md-3">
-                                    <p className="bold">GROUP:</p>
+                                    <p className="bold">Grupo Ingles:</p>
                                     <input type="text" className="form-control" defaultValue={this.props.grupo_id} name="grupo_id" onChange={e=> this.change(e)} disabled /> 
                                 </div>
                             </div>
                             <div className="row">
                                 <div className="col align-self-end">
-                                    <button className="btn btn-secondary float-right btn-primary" onClick={e=>{
+                                    <button className="btn btn-secondary float-right btn-primary" disabled = {this.state.disabled} onClick={e=>{
                                         this.save(e);
                                     }}>Save</button>
                                 </div>

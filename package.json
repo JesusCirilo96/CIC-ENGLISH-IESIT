@@ -1,7 +1,7 @@
 {
   "name": "cic-english-iesit",
   "version": "1.0.0",
-  "description": "",
+  "description": "Sistema cic english iesit",
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --open --mode development ",
@@ -9,7 +9,7 @@
     "build": "webpack"
   },
   "keywords": [],
-  "author": "",
+  "author": "1403B005",
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.1.2",

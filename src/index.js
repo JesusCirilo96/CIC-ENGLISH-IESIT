@@ -1,6 +1,9 @@
 import React from "react";
 import {render} from "react-dom";
 
+import 'primereact/resources/themes/nova-light/theme.css';
+import 'primereact/resources/primereact.min.css';
+import 'primeicons/primeicons.css';
 
 import './css/body.css';
 import './formUtil/util.css';
@@ -10,10 +13,6 @@ import './css/404.css';
 
 import 'bulma/css/bulma.css'
 import Favicon from 'react-favicon';
-
-import 'primereact/resources/themes/nova-light/theme.css';
-import 'primereact/resources/primereact.min.css';
-import 'primeicons/primeicons.css';
 
 import AuthSite from './js/components/Auth.jsx';
 

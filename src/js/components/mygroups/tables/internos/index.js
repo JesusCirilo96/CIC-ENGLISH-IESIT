@@ -8,7 +8,6 @@ import Parcial3 from "./parcial3";
 import Nivelacion from "./nivelacion";
 import Final from "./finales";
 import Extraordinario from "./extraordinario";
-import Alumno from "./alumno";
 
 
 class Index extends Component{
@@ -103,7 +102,7 @@ class Index extends Component{
           }
         }
         return students
-      }
+    }
 
     render(){
         return(

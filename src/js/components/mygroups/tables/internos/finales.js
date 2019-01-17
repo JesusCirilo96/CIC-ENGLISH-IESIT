@@ -1,6 +1,7 @@
 import React, { Component} from "react";
 import ReactTable from "react-table";
 import request from 'superagent';
+import {Button} from 'primereact/button';
 
 class Final extends Component {  
 
@@ -29,10 +30,13 @@ class Final extends Component {
   }
 
   saveFinal(calificacion,matricula,grupo){
+    var regex = /(\d+)/g
+    calificacion = calificacion.match(regex)
+    
     request
       .post('http://localhost:3000/nivelacionint')
       .send({
-        calificacion: calificacion,
+        calificacion: parseInt(calificacion),
         param:"F",
         matricula: matricula,
         grupo: grupo
@@ -57,15 +61,14 @@ class Final extends Component {
     if(promedio < 210){
       if(cal1 < cal2 && cal1 < cal3){
         promedio = (cal2 + cal3 + calNivelacion)/3
-      }else if(cal2 < cal3){
+      }else if(cal2 < cal1 && cal2 < cal3){
         promedio = (cal1 + cal3 + calNivelacion)/3
-      }else{
-        promedio = (cal2 + cal3 + calNivelacion)/3
+      }else if(cal3 < cal1 && cal3 < cal2){
+        promedio = (cal1 + cal2 + calNivelacion)/3
       }
     }else{
       promedio = promedio/3
     }
-
     promedio = Math.round(promedio * 10)/10
 
     promedio = (promedio + calFinal)/2
@@ -121,21 +124,23 @@ class Final extends Component {
                 Header:"Acciones",
                 Cell: props =>{
                   return(
-                    <button className="btn btn-light" 
+                    <Button
+                      className="p-button-secondary"
+                      label="Guardar"
+                      icon="pi pi-check"
+                      iconPos="right"
                       onClick={()=>{
                         this.saveFinal(
-                            props.original.FINAL,
+                            String(props.original.FINAL),
                             props.original.ALUMNO_MATRICULA,
                             props.original.GRUPO_ID
                         )
                       }}
-                    >Guardar</button>
+                    />
                   )
                 },
                 sortable: false,
-                width: 100,
-                maxWidth: 100,
-                minWidth: 100
+                width: 120
               }
           
             ];
@@ -152,6 +157,7 @@ class Final extends Component {
                 rowsText = 'Registros'
                 defaultPageSize = {15}
                 className="-highlight"
+                showPaginationBottom = {false}
                 columns = {columns} data = {this.props.dataTable}>
             </ReactTable>      
           </div>
