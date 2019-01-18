@@ -64,12 +64,13 @@ class Header extends Component{
                                     Mis Grupos
                                 </a>
                                 <div className="navbar-dropdown">
-                                    <Link className="navbar-item" to="/misgruposinternos">Grupos internos</Link>
-                                    <Link className="navbar-item" to="/misgruposexternos">Grupos externos</Link>
+                                    <Link className="navbar-item" to="/misgruposinternos">Grupos Internos</Link>
+                                    <Link className="navbar-item" to="/misgruposexternos">Grupos Externos</Link>
                                 </div>
                             </div>
                             :null
                         }
+                        <Link className="navbar-item" to="/inscripcion">Inscripciones</Link>
                         {
                             this.props.level === 1 ?
                             <div className="navbar-item has-dropdown is-hoverable">
@@ -82,21 +83,11 @@ class Header extends Component{
                                     <Link className="navbar-item" to="/licenciatura">Licenciaturas</Link>
                                     <Link className="navbar-item" to="/docentes">Docentes</Link>
                                     <Link className="navbar-item" to="/nivel">Niveles</Link>
-                                    <Link className="navbar-item" to="/horarios">Horarios</Link>
-                                    <Link className="navbar-item" to="/cicloescolar">C/P Escolar</Link>
+                                    <Link className="navbar-item" to="/extras">Extras</Link>
                                 </div>
                             </div>
                             :null
                         }
-                        
-                        <div className="navbar-item has-dropdown is-hoverable">
-                            <a className="navbar-link">
-                                Mas..
-                            </a>
-                            <div className="navbar-dropdown">
-                                <Link className="navbar-item" to="/inscripcion">Inscripciones</Link>
-                            </div>
-                        </div>
                     </div>
 
                     <div className="navbar-end">
@@ -107,7 +98,7 @@ class Header extends Component{
                             <div className="navbar-dropdown">
                                 <Link className="navbar-item" to="/settings">Mi perfil</Link>
                                 <hr className="navbar-divider"/>
-                                <a className="navbar-item"
+                                <a className="navbar-item" href="http://localhost/iesit_english_cic/"
                                     onClick={()=> this.props.fakeAuth.sigout(()=> this.props.history.push('/'))}>
                                     Cerrar sesion
                                 </a>

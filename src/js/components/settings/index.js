@@ -95,7 +95,7 @@ class Settings extends Component{
             request
             .post('http://localhost:3000/docente')
             .send({
-                    modificacion:'P',
+                    modificacion:'P',//p for update password procedure
                     docente_id:this.state.id,
                     passwordA:this.state.passwordA,
                     passwordN:this.state.passwordN

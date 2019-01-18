@@ -100,7 +100,7 @@ class Paciente extends Component {
               pageText = 'Pagina'
               ofText = 'de'
               rowsText = 'Registros'
-              defaultPageSize = {5}
+              defaultPageSize = {10}
               filterable
               columns = {columns} data = {this.state.dataJson}>
           </ReactTable>      

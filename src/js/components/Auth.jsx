@@ -26,6 +26,7 @@ import GrupoInterno from './catalogo/view/GrupoInt';
 import Docente from './catalogo/view/Docente';
 import Nivel from './catalogo/view/Nivel';
 import Licenciatura from './catalogo/view/Licenciatura';
+import Extras from './catalogo/Extras'
 
 import MiGrupoInterno from './mygroups/groups/internos';
 import MiGrupoExterno from './mygroups/groups/externos';
@@ -146,7 +147,8 @@ const Authsite = () =>(
                 <PrivateRoute exact path="/gruposinternos" component={GrupoInterno}/>
                 <PrivateRoute exact path="/docentes" component={Docente}/>
                 <PrivateRoute exact path="/licenciatura" component={Licenciatura}/>
-                <PrivateRoute exact path="/nivel" component={Nivel}/>                
+                <PrivateRoute exact path="/nivel" component={Nivel}/>       
+                <PrivateRoute exact path="/extras" component={Extras}/>
 
                 <Route component={Page404}/>
             </Switch>

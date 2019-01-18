@@ -24,7 +24,6 @@ class GrupoForm extends Component {
         nivel:'',
         dias: '',
         docente:'',
-        estado:'',
         horario:'',
         msg: false
     }
@@ -80,22 +79,30 @@ class GrupoForm extends Component {
             dataHorario: horario
             });
         });
-        this.periodoEscolar();
     }
   }
 
-  periodoEscolar(){
+ 
+  periodoEscolar(e){
+    this.setState({
+        ciclo_escolar: e.value
+    })
     request
-    .get('http://localhost:3000/periodoescolar')
+    .post('http://localhost:3000/getbyid')
+    .send({
+        "tbl":"PE",
+        "id": e.value
+    })            
+    .set('Accept', /application\/json/)
     .end((err, response)=>{
-        const data = JSON.parse(response.text);
-        var periodo = []
-        for(var key in data){
-            periodo.push({'value':data[key].PERIODO_ID,'label':data[key].NOMBRE})
-        }
-        this.setState({
+      const data = JSON.parse(response.text);
+      var periodo = []
+      for(var key in data){
+          periodo.push({'value':data[key].PERIODO_ESCOLAR_ID,'label':data[key].NOMBRE})
+      }
+      this.setState({
         dataPeriodo: periodo
-        });
+      });
     });
   }
 
@@ -116,7 +123,7 @@ class GrupoForm extends Component {
   }
 
   save (e){
-    var nombre = this.state.nombre, salon = this.state.salon, horario = this.state.horario, estado = this.state.estado
+    var nombre = this.state.nombre, salon = this.state.salon, horario = this.state.horario
     if(this.props.edit === false){
         var grupo = this.state.grupo, modalidad =this.state.modalidad, ciclo = this.state.ciclo_escolar, periodo = this.state.periodo_escolar
         var turno = this.state.turno, nivel = this.state.nivel
@@ -132,7 +139,6 @@ class GrupoForm extends Component {
             nivel !== '' && 
             dias !== '' && 
             docente !== '' &&
-            estado !== '' &&
             horario !== ''){
                 this.state.accion = 'S'
                 this.saveRequest()           
@@ -141,10 +147,9 @@ class GrupoForm extends Component {
         if(nombre === ''){this.state.nombre = this.props.data.NOMBRE_GRUPO}
         if(salon === ''){this.state.salon = this.props.data.SALON}
         if(horario === ''){this.state.horario = this.props.data.HORARIO}
-        if(estado === ''){this.state.estado = this.props.data.ESTADO}
         this.state.accion = 'U'
         this.saveRequest()
-        this.props.get_data()
+        this.props.get_data("0","ALL","0")
     }
     console.log(this.state)
     e.preventDefault()
@@ -217,10 +222,6 @@ class GrupoForm extends Component {
         {value: '0', label:'Matutino'},
         {value: '1', label:'Vespertino'},
         {value: '2', label:'Mixto'}
-    ]
-    const estado = [
-        {value: '0', label:'Activo'},
-        {value: '1', label:'Inactivo'}
     ]
 
     return(
@@ -339,9 +340,7 @@ class GrupoForm extends Component {
                         <div className="selectStyle">
                              <Select className="form-control"
                                     onChange={e => 
-                                        this.setState({
-                                            ciclo_escolar: e.value
-                                        })
+                                        this.periodoEscolar(e)
                                     }
                                     name = "nivel"
                                     options = {this.state.dataCiclo}
@@ -524,24 +523,7 @@ class GrupoForm extends Component {
                                 />
                             </div>
                         }
-                    </div>
-                    <div className="col-md-4">
-                    Estado:
-                        <div className="selectStyle">
-                            <Select className="form-control"
-                                defaultValue={estado[this.props.data.ESTADO]}
-                                name = "estado"
-                                options = {estado}
-                                onChange={e => 
-                                    this.setState({
-                                        estado: String(e.value)
-                                    })
-                                }
-                                className="basic-multi-select"
-                                classNamePrefix="select"
-                            />
-                        </div>
-                    </div>              
+                    </div>     
                 </div>
                 <div className="">
                         <div className="container-contact100-form-btn">

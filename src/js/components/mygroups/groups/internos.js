@@ -20,7 +20,7 @@ class Internos extends Component{
     componentDidMount(){
         request
             .post('http://localhost:3000/getgroupint')
-            .send({"clave":store.getState().teacher[0].id})            
+            .send({"opcion":"ID","clave":store.getState().teacher[0].id,"periodo_id":"0"})            
             .set('Accept', /application\/json/)
             .end((err, response)=>{
                 const res = (JSON.parse(response.text))

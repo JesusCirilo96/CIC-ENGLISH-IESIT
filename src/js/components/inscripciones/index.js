@@ -78,7 +78,9 @@ class Inscripcion extends Component{
         request
         .post('http://localhost:3000/getgroupint')
         .send({
-            "clave": '0'
+            "opcion":'ALL',
+            "clave": '0',
+            "perido_id":"0"
         })            
         .set('Accept', /application\/json/)
         .end((err, response)=>{

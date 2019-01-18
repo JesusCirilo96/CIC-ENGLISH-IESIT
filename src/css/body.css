@@ -264,3 +264,8 @@ html {
 .form-grupo-externo .row{
     margin-bottom: 15px;
 }
+
+.form-extras{
+    width: 60%;
+    margin: auto;
+}

@@ -2,18 +2,20 @@ import React, { Component} from "react";
 
 import GrupoForm from '../forms/GrupoIntForm';
 import GrupoTable from '../tables/GrupoIntTable';
-import Select from 'react-select';
 import request from 'superagent';
 
 import {Toolbar} from 'primereact/toolbar'
 import {Button} from 'primereact/button'
 import {AutoComplete} from 'primereact/autocomplete'
+import {Dropdown} from 'primereact/dropdown';
 
 class Grupo extends Component{
 
     constructor(){
         super();
         this.state = {
+            periodoEscolar: null,
+            periodoOptions:[],
             docente:"",
             dataDocente:[],
             filteredDocente:null,
@@ -30,7 +32,7 @@ class Grupo extends Component{
         }
 
         this.showForm = this.showForm.bind(this)
-        this.getRequest = this.getRequest.bind(this)
+        this.getGruposInternos = this.getGruposInternos.bind(this)
         this.filterDocente = this.filterDocente.bind(this)
     }
 
@@ -43,15 +45,23 @@ class Grupo extends Component{
         }, 250);
     }
 
-    getRequest(){
+    onPeriodoChange(e) {
+        this.setState({periodoEscolar: e.value});
+        this.getGruposInternos("0","PE",e.value.code)
+    }
+
+    getGruposInternos(clave,opcion,periodo){
         request
         .post('http://localhost:3000/getgroupint')
         .send({
-            "clave": '0'
+            "opcion": opcion,
+            "clave": clave,
+            "periodo_id": periodo
         })            
         .set('Accept', /application\/json/)
         .end((err, response)=>{
             const res = (JSON.parse(response.text))
+            console.log(response)
             this.setState({dataGrupo:res, updateGrupo:res, updateDocente:res})
         });
     }
@@ -74,7 +84,7 @@ class Grupo extends Component{
     }
     
     componentDidMount(){
-        this.getRequest()
+        this.getGruposInternos('0','ALL','0')
         if(!this.props.edit){
             request
             .get('http://localhost:3000/docente')
@@ -82,7 +92,6 @@ class Grupo extends Component{
                 const data = JSON.parse(response.text);
                 var docente = []
                 for(var key in data){
-                    //docente.push({'value':data[key].DOCENTE_ID,'label':data[key].NOMBRE_COMPLETO})
                     docente.push({'name':data[key].NOMBRE_COMPLETO})
                 }
                 this.setState({
@@ -90,6 +99,19 @@ class Grupo extends Component{
                 });
             });
         }
+        request
+        .get('http://localhost:3000/periodoescolar')
+        .set('Accept', /application\/json/)
+        .end((err, response)=>{
+            const res = (JSON.parse(response.text))
+            var periodo = []
+            for(var key in res){
+                periodo.push({name:res[key].NOMBRE,code:res[key].PERIODO_ID})
+            }
+            this.setState({
+                periodoOptions:periodo
+            })
+        });
       }
 
     showForm(e){
@@ -126,7 +148,8 @@ class Grupo extends Component{
                     <Button className={this.state.style} label={this.state.name} icon={this.state.icon} style={{marginRight:'.25em'}} onClick={e=>{this.showForm(e)}}/>
                     <i className="pi pi-bars p-toolbar-separator" style={{marginRight:'.25em'}} />
                     <Button className="p-button-warning" label="Save" icon="pi pi-check" style={{marginRight:'.25em'}} disabled={this.state.disabledSave} />
-                    <Button label="Update" icon="pi pi-upload" className="p-button-success" disabled={this.state.disabledUpdate}/>
+                    <Button label="Update" icon="pi pi-upload" className="p-button-success" style={{marginRight:'.25em'}} disabled={this.state.disabledUpdate}/>
+                    <Dropdown value={this.state.periodoEscolar} options={this.state.periodoOptions} onChange={e=>{this.onPeriodoChange(e)}} style={{width:'250px'}} placeholder="Filtrar por periodo" optionLabel="name"/>
                 </div>
                 <div className="p-toolbar-group-right">
                     <AutoComplete value={this.state.docente} suggestions={this.state.filteredDocente} completeMethod={this.filterDocente} field="name"
@@ -145,7 +168,7 @@ class Grupo extends Component{
                         <GrupoTable 
                             show={this.showForm}
                             dataJson = {this.state.updateGrupo}
-                            getRequest = {this.getRequest}  />:
+                            getRequest = {this.getGruposInternos}  />:
                     null
                 }
             </div>
