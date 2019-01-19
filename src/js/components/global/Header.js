@@ -98,7 +98,7 @@ class Header extends Component{
                             <div className="navbar-dropdown">
                                 <Link className="navbar-item" to="/settings">Mi perfil</Link>
                                 <hr className="navbar-divider"/>
-                                <a className="navbar-item" href="http://localhost/iesit_english_cic/"
+                                <a className="navbar-item" href="http://localhost/prueba/"
                                     onClick={()=> this.props.fakeAuth.sigout(()=> this.props.history.push('/'))}>
                                     Cerrar sesion
                                 </a>

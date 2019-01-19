@@ -6,18 +6,22 @@ import Alumno from './inscripcion';
 import {Dialog} from 'primereact/dialog';
 import {Button} from 'primereact/button'; 
 import Select from 'react-select';
+import {Dropdown} from 'primereact/dropdown';
 
 class Inscripcion extends Component{
     constructor(){
         super();
 
         this.state = {
+            periodoEscolar: null,
+            periodoOptions:[],
             dataGrupos:[],
             showForm: true,
             showTable: false,
             visible: false,
             grupo_id: '',
             matricula:'',
+            tipo_curso:'',
             nroAlumnos: 0
         };
         
@@ -31,7 +35,7 @@ class Inscripcion extends Component{
     }
 
     componentDidMount(){
-        this.getGrupoInt()
+        this.getGrupoInt('0','ALL','0')
         request
         .get('http://localhost:3000/alumno')
         .end((err, response)=>{
@@ -44,12 +48,30 @@ class Inscripcion extends Component{
                 dataAlumno: alumno
             });
         });
+        request
+        .get('http://localhost:3000/periodoescolar')
+        .set('Accept', /application\/json/)
+        .end((err, response)=>{
+            const res = (JSON.parse(response.text))
+            var periodo = []
+            for(var key in res){
+                periodo.push({name:res[key].NOMBRE,code:res[key].PERIODO_ID})
+            }
+            this.setState({
+                periodoOptions:periodo
+            })
+        });
     } 
     showForm(){
         this.setState ({
             showForm : !this.state.showForm,
             showTable : !this.state.showTable
         })
+    }
+
+    onPeriodoChange(e) {
+        this.setState({periodoEscolar: e.value});
+        this.getGrupoInt("0","PE",e.value.code)
     }
 
     onClick(GRUPO_ID, ALUMNOS_INSCRITOS) {
@@ -74,17 +96,18 @@ class Inscripcion extends Component{
         });
     };
 
-    getGrupoInt(){
+    getGrupoInt(clave,opcion,periodo){
         request
         .post('http://localhost:3000/getgroupint')
         .send({
-            "opcion":'ALL',
-            "clave": '0',
-            "perido_id":"0"
+            "opcion": opcion,
+            "clave": clave,
+            "periodo_id": periodo
         })            
         .set('Accept', /application\/json/)
         .end((err, response)=>{
             const res = (JSON.parse(response.text))
+            //console.log(res)
             this.setState({dataGrupos:res})
         });
     }
@@ -95,7 +118,8 @@ class Inscripcion extends Component{
             .post('http://localhost:3000/alumnogrupoint')
             .send({
                 matricula: matricula,
-                grupo_id: this.state.grupo_id
+                grupo_id: this.state.grupo_id,
+                tipo_curso: this.state.tipo_curso
             })
             .set('Accept', /application\/json/)
             .end((err, response)=>{
@@ -103,10 +127,14 @@ class Inscripcion extends Component{
                 const msg = (JSON.parse(response.text)['data'].msg);
                 if(res){
                     this.addNotification("Alumno",msg,"success")
-                    this.getGrupoInt()
                     this.setState({
                         nroAlumnos: this.state.nroAlumnos + 1
                     })
+                    if(this.state.periodoEscolar.code === ""){
+                        this.getGrupoInt('0','ALL','0')
+                    }else{
+                        this.getGrupoInt("0","PE",this.state.periodoEscolar.code)
+                    }
                 }else{
                     this.addNotification("Alumno",msg,"error")
                 }
@@ -116,14 +144,33 @@ class Inscripcion extends Component{
         }
     }
 
+    grupoInternoUpdate(){  
+        if(this.state.periodoEscolar.code === ""){
+            this.getGrupoInt('0','ALL','0')
+        }else{
+            this.getGrupoInt("0","PE",this.state.periodoEscolar.code)
+        }
+        this.showForm()
+    }
+
     render(){
         const footer = (
-            <div>
-                <Button label="Agregar" icon="pi pi-check" onClick={e=>{
-                                    this.addAlumno(this.state.matricula,this.state.nroAlumnos)
-                                }} />
-                <Button label="Cancelar" icon="pi pi-times" onClick={this.onHide} className="p-button-secondary" />
-            </div>
+            <div className="row justify-content-between">
+                <div className="col-4">
+                    <a href="#" onClick={e=>{
+                                this.setState ({
+                                    showForm : !this.state.showForm,
+                                    showTable : !this.state.showTable,
+                                    visible: false
+                    })}}>¿El alumno no esta inscrito?</a>
+                </div>
+                <div className="col-8">
+                    <Button label="Agregar" icon="pi pi-check" onClick={e=>{
+                        this.addAlumno(this.state.matricula,this.state.nroAlumnos)
+                    }} />
+                    <Button label="Cancelar" icon="pi pi-times" onClick={this.onHide} className="p-button-secondary" /> 
+                </div>    
+            </div>                 
         );
         const columns = [
             {
@@ -172,57 +219,70 @@ class Inscripcion extends Component{
             }
         
         ];
+        const tipo_curso = [
+            {value: '1', label:'Curricular'},
+            {value: '2', label:'Curso'},
+            {value: '3', label:'Recursamiento'}
+        ]
         return(
             <div className="contenedor-tabla">
-            {
+                {
                 this.state.showForm?
-                <ReactTable 
-                    previousText = "Anterior"
-                    nextText =  'Siguiente'
-                    loadingText = 'Cargando...'
-                    noDataText = 'No se encontraron Registros'
-                    pageText = 'Pagina'
-                    ofText = 'de'
-                    rowsText = 'Registros'
-                    defaultPageSize = {20}
-                    className="-highlight"
-                    filterable
-                    columns = {columns} data = {this.state.dataGrupos}>
-                </ReactTable>
+                <div>
+                    <Dropdown value={this.state.periodoEscolar} options={this.state.periodoOptions} onChange={e=>{this.onPeriodoChange(e)}} style={{width:'250px'}} placeholder="Filtrar por periodo" optionLabel="name"/>            
+                    <ReactTable 
+                        previousText = "Anterior"
+                        nextText =  'Siguiente'
+                        loadingText = 'Cargando...'
+                        noDataText = 'No se encontraron Registros'
+                        pageText = 'Pagina'
+                        ofText = 'de'
+                        rowsText = 'Registros'
+                        defaultPageSize = {20}
+                        className="-highlight"
+                        filterable
+                        columns = {columns} data = {this.state.dataGrupos}>
+                    </ReactTable>
+                </div>
                 :null
-            }
-            {
+                }        
+                {
                 this.state.showTable?
                 <div>
-                    <a href="#" onClick={this.showForm} >Regresar</a>
+                    <a href="#" onClick={e=>this.grupoInternoUpdate()} >Regresar</a>
                     <Alumno grupo_id = {this.state.grupo_id} nroAlumnos={this.state.nroAlumnos} grupo_int={this.getGrupoInt} notificacion={this.addNotification} />
                 </div>
                 :null
-            }
+                }
 
-            <Dialog header="Reinscripcion" visible={this.state.visible} style={{width: '50vw'}} footer={footer} onHide={this.onHide} maximizable>
+                <Dialog header="Reinscripcion" visible={this.state.visible} style={{width: '50vw'}} footer={footer} onHide={this.onHide} maximizable>
                 <div className="row">
-                    <div className="col-md-12">
+                    <div className="col-md-7">
                         <Select className="form-control"
                             onChange={e => 
                                 this.setState({
                                 matricula: e.value
                             })}
-                            name = "licencitura"
+                            placeholder="Nombre del alumno"
                             options = {this.state.dataAlumno}
                             className="basic-single"
                             classNamePrefix="select"
                         />
                     </div>
-                    <div className="col-md-12">
-                        <a href="#" onClick={e=>{
-                             this.setState ({
-                                 showForm : !this.state.showForm,
-                                 showTable : !this.state.showTable,
-                                 visible: false
-                        })}}>¿El alumno no esta inscrito?</a>
+                    <div className="col-md-5">
+                        <Select className="form-control"
+                            onChange={e => 
+                                this.setState({
+                                tipo_curso: e.value
+                            })}
+                            options = {tipo_curso}
+                            placeholder="Tipo curso"
+                            className="basic-single"
+                            classNamePrefix="select"
+                        />
                     </div>
                 </div>
+                <small id="emailHelp" className="form-text text-muted">Solo figuran los alumnos Inscritos con anterioridad</small>
             </Dialog>
 
             <NotificationSystem ref={this.notificationSystem} />

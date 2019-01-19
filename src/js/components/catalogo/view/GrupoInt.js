@@ -26,9 +26,7 @@ class Grupo extends Component{
             showTable:true,
             name: "Nuevo",
             icon:"pi pi-plus",
-            style:"",
-            disabledSave:"disabled",
-            disabledUpdate:"disabled"
+            style:""
         }
 
         this.showForm = this.showForm.bind(this)
@@ -61,7 +59,7 @@ class Grupo extends Component{
         .set('Accept', /application\/json/)
         .end((err, response)=>{
             const res = (JSON.parse(response.text))
-            console.log(response)
+            console.log("response:", clave, opcion, periodo)
             this.setState({dataGrupo:res, updateGrupo:res, updateDocente:res})
         });
     }
@@ -124,15 +122,13 @@ class Grupo extends Component{
             this.setState({
                 name:"Cancelar",
                 icon:"pi pi-times",
-                style:"p-button-danger",
-                disabledSave:""
+                style:"p-button-danger"
             })
         }else{
             this.setState({
                 name:"Nuevo",
                 icon:"pi pi-plus",
-                style:"",
-                disabledSave:"disabled"
+                style:""
             })
         }
        
@@ -147,8 +143,6 @@ class Grupo extends Component{
                 <div className="p-toolbar-group-left">
                     <Button className={this.state.style} label={this.state.name} icon={this.state.icon} style={{marginRight:'.25em'}} onClick={e=>{this.showForm(e)}}/>
                     <i className="pi pi-bars p-toolbar-separator" style={{marginRight:'.25em'}} />
-                    <Button className="p-button-warning" label="Save" icon="pi pi-check" style={{marginRight:'.25em'}} disabled={this.state.disabledSave} />
-                    <Button label="Update" icon="pi pi-upload" className="p-button-success" style={{marginRight:'.25em'}} disabled={this.state.disabledUpdate}/>
                     <Dropdown value={this.state.periodoEscolar} options={this.state.periodoOptions} onChange={e=>{this.onPeriodoChange(e)}} style={{width:'250px'}} placeholder="Filtrar por periodo" optionLabel="name"/>
                 </div>
                 <div className="p-toolbar-group-right">
@@ -177,19 +171,3 @@ class Grupo extends Component{
 }
 
 export default Grupo;
-/*
-<div className="row">
-                    <div className="col-md-4">
-                        <p className="bold">Docente:</p>
-                        <Select className="form-control"
-                            name = "docente"
-                            onChange={e =>
-                                this.filterData(e.label)
-                            }
-                            options = {this.state.dataDocente}
-                            className="basic-multi-select"
-                            classNamePrefix="select"
-                        />
-                    </div>
-                </div>
-                <hr/>       */        

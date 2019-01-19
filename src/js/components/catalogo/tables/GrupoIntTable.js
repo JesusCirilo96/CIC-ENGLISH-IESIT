@@ -41,11 +41,11 @@ class GrupoTable extends Component{
                                         <div className="card bg-ligh mb-3">
                                             <div className="card-header text-center"><strong>{data.NOMBRE_GRUPO}</strong></div>
                                             <div className="card-body">
-                                                <p className="card-text"><strong>Level :</strong> {data.NIVEL}</p>
-                                                <p className="card-text"><strong>Classroom: </strong>{data.SALON}</p>
-                                                <p className="card-text"><strong>Days: </strong>{data.DIAS}</p>
-                                                <p className="card-text"><strong>Schedule: </strong> {data.HORARIO}</p>        
-                                                <p className="card-text"><strong>Teacher: </strong> {data.NOMBRE_DOCENTE}</p> 
+                                                <p className="card-text"><strong>Nivel :</strong> {data.NIVEL}</p>
+                                                <p className="card-text"><strong>Salon: </strong>{data.SALON}</p>
+                                                <p className="card-text"><strong>Dias: </strong>{data.DIAS}</p>
+                                                <p className="card-text"><strong>Horario: </strong> {data.HORARIO}</p>        
+                                                <p className="card-text"><strong>Docente: </strong> {data.NOMBRE_DOCENTE}</p> 
                                             </div>
                                         </div>
                                     </div>

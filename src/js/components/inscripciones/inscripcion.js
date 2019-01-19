@@ -19,7 +19,8 @@ class Inscripcion extends Component{
             grupo:'',
             email:'',
             nroAlumnos: props.nroAlumnos,
-            disabled: ""
+            disabled: "",
+            tipo_curso:""
         }
     }
 
@@ -55,7 +56,7 @@ class Inscripcion extends Component{
           [e.target.name]: e.target.value
         });
     }
-
+    
     save (e){
         request
           .post('http://localhost:3000/alumno')
@@ -78,16 +79,6 @@ class Inscripcion extends Component{
             if(res){
                 this.props.notificacion("Alumno",msg,"success")
                 this.addAlumno(this.state.matricula)
-                this.setState({
-                    matricula:'',                    
-                    nombre:'',
-                    app:'',
-                    apm:'',
-                    licenciatura:'',
-                    semestre:'',
-                    grupo:'',
-                    email:''
-                })
             }else{
                 this.props.notificacion("Alumno",msg,"error")
             } 
@@ -101,7 +92,8 @@ class Inscripcion extends Component{
             .post('http://localhost:3000/alumnogrupoint')
             .send({
                 matricula: matricula,
-                grupo_id: this.props.grupo_id
+                grupo_id: this.props.grupo_id,
+                tipo_curso: this.state.tipo_curso
             })
             .set('Accept', /application\/json/)
             .end((err, response)=>{
@@ -112,7 +104,6 @@ class Inscripcion extends Component{
                     this.setState({
                         nroAlumnos: this.state.nroAlumnos + 1
                     })
-                    this.props.grupo_int()
                     //console.log(this.state.nroAlumnos)
                 }else{
                     this.props.notificacion("Alumno",msg,"error")
@@ -132,6 +123,11 @@ class Inscripcion extends Component{
             {value: '0', label:'A'},
             {value: '1', label:'B'},
             {value: '2', label:'C'}
+        ]
+        const tipo_curso = [
+            {value: '1', label:'Curricular'},
+            {value: '2', label:'Curso'},
+            {value: '3', label:'Recursamiento'}
         ]
         const semestre = [
             {value:'1', label:'Primero'},
@@ -221,6 +217,21 @@ class Inscripcion extends Component{
                                 <div className="col-md-6">
                                     <p className="bold">Correo electronico:</p>
                                     <input type="email" className="form-control" defaultValue={this.state.email} placeholder="example@example.com" name="email" onChange={e=> this.change(e)} disabled = {this.state.disabled} /> 
+                                </div>
+                                <div className="col-md-3">
+                                <p className="bold">Tipo curso:</p>
+                                    <Select className="form-control"
+                                        onChange={e => 
+                                            this.setState({
+                                                tipo_curso: e.value
+                                            })
+                                        }
+                                        isDisabled = {this.state.disabled}
+                                        name = "tipo_curso"
+                                        options = {tipo_curso}
+                                        className="basic-multi-select"
+                                        classNamePrefix="select"
+                                    />
                                 </div>
                                 <div className="col-md-3">
                                     <p className="bold">Grupo Ingles:</p>

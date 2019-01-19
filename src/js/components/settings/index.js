@@ -159,31 +159,31 @@ class Settings extends Component{
                 <div className="col-md-12">
                     <div className="row">
                         <div className="col-md-3">
-                            <h1>My Profile</h1>
+                            <h1>Mi perfil</h1>
                         </div>
                     </div>
                     <hr/>
                     <div className="row">
                         <div className="col-md-3 form-settings-aside">
                             <div className="row">
-                                <div className="col-md-12"><p><strong>Access Level:</strong> <br/>{this.getNivel(this.state.level)}</p></div>
+                                <div className="col-md-12"><p><strong>Nivel de acceso:</strong> <br/>{this.getNivel(this.state.level)}</p></div>
                             </div>
                             <div className="row">
-                                <div className="col-md-12"><p><strong>Added the day:</strong><br/> {this.state.date}</p></div>
+                                <div className="col-md-12"><p><strong>Añadido el dia:</strong><br/> {this.state.date}</p></div>
                             </div>
                             <div className="row">
-                                <div className="col-md-12"><p><strong>Status:</strong> {this.getEstado(this.state.status)} </p></div>
+                                <div className="col-md-12"><p><strong>Estado actual:</strong> {this.getEstado(this.state.status)} </p></div>
                             </div>
                         </div>
                         <div className="form-settings col-md-9">
                             <form className="">
                                 <div className="row form-group">
                                     <div className="col-md-6">
-                                        <p className="bold">NAME:</p>
+                                        <p className="bold">Nombre:</p>
                                         <input type="text" className="form-control" defaultValue={this.state.nombre} name="nombre" onChange={e=> this.change(e)} /> 
                                     </div>
                                     <div className="col-md-6 input-group">
-                                        <p className="bold">LAST NAME:</p>
+                                        <p className="bold">Apellidos:</p>
                                         <div className="input-group">
                                             <input type="text" className="form-control" defaultValue={this.state.app} name="app" onChange={e=> this.change(e)} />
                                             <input type="text" className="form-control" defaultValue={this.state.apm} name="apm" onChange={e=> this.change(e)} />
@@ -192,20 +192,20 @@ class Settings extends Component{
                                 </div>
                                 <div className="row form-group">
                                     <div className="col-md-6">
-                                        <p className="bold">EMAIL ADDRESS:</p>
+                                        <p className="bold">Correo electronico:</p>
                                         <input type="email" className="form-control" defaultValue={this.state.email} placeholder="example@example.com" name="email" onChange={e=> this.change(e)} />
                                     </div>
                                     <div className="col-md-6">
-                                        <p className="number bold">MOBILE NUMBER:</p>
+                                        <p className="number bold">Telefono:</p>
                                         <InputMask size="50" mask="(999) 999-9999" value={this.state.mobile_number} placeholder="Enter your mobile number" name="mobile_number" onChange={(e) => this.change(e)}></InputMask>
-                                        <small id="emailHelp" className="form-text text-muted">This information can be used to contact you.</small>
+                                        <small id="emailHelp" className="form-text text-muted">Esta informacion puede utilizarse para contactarte.</small>
                                     </div>
                                 </div>
                                 <div className="row">
                                     <div className="col align-self-end">
                                         <button className="btn btn-primary" onClick={e=>{
                                             this.saveD(e);
-                                        }}>Save</button>
+                                        }}>Guardar</button>
                                     </div>
                                     {
                                         this.state.msgD?
@@ -215,7 +215,7 @@ class Settings extends Component{
                                 </div>
                             </form>
                             <hr/>
-                            <h4>Change your password</h4>
+                            <h4>Cambia tu contraseña</h4>
                             <form className="col-md-12 form-group">
                                 
                                     <div className="row">
@@ -241,7 +241,7 @@ class Settings extends Component{
                                                 onClick={e=>
                                                     this.savePassword(e)
                                                 }
-                                            >Change</button>
+                                            >Cambiar</button>
                                         </div>
                                     </div>
                             </form>

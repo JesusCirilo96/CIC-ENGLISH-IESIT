@@ -10,7 +10,6 @@ class DocenteTable extends Component {
       nombre : '',
       apellido_pat : '',
       apellido_mat : '',
-      estado : '',
       nivel_acceso : '',
       email: '',
       msg: false
@@ -99,21 +98,7 @@ class DocenteTable extends Component {
                   <option value="1">Admin</option>
                   <option value="2">Docente</option>
                 </select>
-              </div>
-
-              <div className="selectStyle">
-                <select className="form-control"
-                  name = "estado"
-                  value={this.state.estado}
-                  onChange={e=> this.change(e)}
-                >
-                  <option defaultValue>Estado..</option>
-                  <option value="1">Activo</option>
-                  <option value="0">Inactivo</option>
-                </select>
-              </div>
-
-
+              </div>        
               <div className="container-contact100-form-btn">
                 <button className="contact100-form-btn"
                   onClick={e=>{
